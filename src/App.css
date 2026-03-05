@@ -18,6 +18,11 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/* 右側に半角スペース */
+.mgr-10{
+  margin-right: 10px;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
