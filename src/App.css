@@ -1,47 +1,125 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* 全体背景 */
+body{
+  margin:0;
+  background: linear-gradient(135deg,#050505,#0f0f1a,#050505);
+  color:#e6e6e6;
+  font-family: "Segoe UI", "Helvetica Neue", sans-serif;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* アプリ全体 */
+#root{
+  max-width:1200px;
+  margin:0 auto;
+  padding:40px;
+  text-align:center;
 }
 
-/* 右側に半角スペース */
+/* 見出し */
+h1{
+  font-size:2.5rem;
+  letter-spacing:2px;
+  color:#00e5ff;
+  text-shadow:0 0 10px #00e5ff;
+}
+
+h2{
+  margin-top:40px;
+  color:#8be9fd;
+}
+
+h3{
+  margin-top:25px;
+  color:#50fa7b;
+}
+
+/* 入力欄 */
+input{
+  background:#0f172a;
+  border:1px solid #00e5ff55;
+  color:white;
+  padding:8px 10px;
+  margin:5px;
+  border-radius:6px;
+  transition:0.2s;
+}
+
+input:focus{
+  outline:none;
+  border:1px solid #00e5ff;
+  box-shadow:0 0 10px #00e5ff66;
+}
+
+/* ボタン */
+button{
+  background:linear-gradient(135deg,#00e5ff,#0077ff);
+  border:none;
+  color:white;
+  padding:8px 14px;
+  margin-left:10px;
+  border-radius:6px;
+  cursor:pointer;
+  font-weight:bold;
+  transition:0.2s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  box-shadow:0 0 10px #00e5ff;
+}
+
+/* 削除ボタンだけ赤系 */
+button:nth-of-type(2){
+  background:linear-gradient(135deg,#ff3b3b,#ff0066);
+}
+
+/* 記録リスト */
+div{
+  margin-top:6px;
+}
+
+/* カードっぽい表示 */
+.card{
+  background:#0a0a12;
+  border:1px solid #00e5ff33;
+  border-radius:10px;
+  padding:20px;
+  margin-top:20px;
+  box-shadow:0 0 20px #00e5ff22;
+}
+
+/* 右余白 */
 .mgr-10{
-  margin-right: 10px;
+  margin-right:10px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* ロゴ */
+.logo{
+  height:6em;
+  padding:1.5em;
+  transition:filter 300ms;
+}
+
+.logo:hover{
+  filter:drop-shadow(0 0 2em #00e5ff);
+}
+
+/* アニメーション */
+@keyframes logo-spin{
+  from{
+    transform:rotate(0deg);
   }
-  to {
-    transform: rotate(360deg);
+  to{
+    transform:rotate(360deg);
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@media (prefers-reduced-motion: no-preference){
+  a:nth-of-type(2) .logo{
+    animation:logo-spin infinite 20s linear;
   }
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+/* 補助文字 */
+.read-the-docs{
+  color:#666;
 }
