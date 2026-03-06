@@ -2,6 +2,7 @@ import { useState , useEffect } from 'react'
 import './App.css'
 import Add from './Add.jsx'
 import Graph from "./Graph.jsx"
+import Dashboard from "./Dashboard.jsx"
 
 // localStorage.clear
 
@@ -116,6 +117,7 @@ function App() {
 
   return(
     <div>
+      <Dashboard record={record}/>
       <Add onAdd={addRecord}/>
       <h2>記録一覧</h2>
       {list}
