@@ -1,7 +1,8 @@
 import { useState , useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import './App.css'
-import Add from './Add.jsx'
+import AddTraining from './AddTraining.jsx'
+import AddCompetition from './AddCompetition.jsx'
 import Graph from "./Graph.jsx"
 import Dashboard from "./Dashboard.jsx"
 import Records  from './Records.jsx'
@@ -125,7 +126,11 @@ function App() {
 
   <Route
     path="/add"
-    element={<Add onAdd={addRecord}/>}
+    element={
+      mode==="training"
+        ?<AddTraining onAdd={addRecord}/>
+        :<AddCompetition onAdd={addRecord}/>
+    }
   />
 
   <Route

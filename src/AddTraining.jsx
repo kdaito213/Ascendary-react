@@ -3,7 +3,7 @@ import { useState , useEffect } from "react";
 function Add({onAdd}){
     const [date , setDate] = useState('')
     const [name , setName] = useState('')
-    const [score , setScore] = useState(0)
+    const [score , setScore] = useState()
 
     function handleAdd(){
         onAdd({date: date, name: name, score: score})
