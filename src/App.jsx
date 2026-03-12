@@ -82,13 +82,14 @@ function App() {
   return(
 
   <BrowserRouter>
-
-  <nav>
-    <Link to="/">ダッシュボード</Link>
-    <Link to="/add">記録</Link>
-    <Link to="/records">一覧</Link>
-    <Link to="/graph">グラフ</Link>
-  </nav>
+  <header className="fixed-header"> 
+    <nav className="header-content">
+      <Link to="/">ダッシュボード</Link>
+      <Link to="/add">記録</Link>
+      <Link to="/records">一覧</Link>
+      <Link to="/graph">グラフ</Link>
+    </nav>
+  </header>
 
   <Routes>
 

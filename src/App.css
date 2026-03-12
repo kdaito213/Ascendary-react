@@ -2,8 +2,8 @@
 
 body{
   margin:0;
-  background:#0f0f0f;
-  color:#f5f5f5;
+  background:white;
+  color:black;
   font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -24,14 +24,45 @@ h1{
 h2{
   margin-top:40px;
   font-size:1.4rem;
-  border-left:4px solid #00c853;
-  padding-left:10px;
 }
 
 h3{
   margin-top:25px;
   font-size:1.2rem;
-  color:#00e676;
+  color:#1279df;
+}
+
+/* ===== 固定ヘッダー ===== */
+
+.fixed-header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #1279df;
+  color: white;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.fixed-header a{
+  color:white;
+  text-decoration:none;
+  margin-right:20px;
+  font-weight:600;
+}
+
+.header-content{
+  max-width:900px;
+  margin:0 auto;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.fixed-header a:hover{
+  text-decoration:underline;
 }
 
 /* ===== 入力フォーム ===== */
@@ -40,16 +71,16 @@ input{
   width:200px;
   padding:10px;
   margin:6px;
-  background:#1c1c1c;
+  background:white;
   border:1px solid #333;
   border-radius:6px;
-  color:white;
+  color:black;
   font-size:14px;
 }
 
 input:focus{
   outline:none;
-  border:1px solid #00e676;
+  border:1px solid #1279df;
 }
 
 /* ===== ボタン ===== */
@@ -117,7 +148,7 @@ button:last-child:hover{
 }
 
 .dashboard-card{
-  background: #111;
+  background: white;
   border: 1px solid #333;
   border-radius: 12px;
 
