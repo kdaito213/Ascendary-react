@@ -1,66 +1,55 @@
 import { useState , useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import './App.css'
 import Add from './Add.jsx'
 import Graph from "./Graph.jsx"
 import Dashboard from "./Dashboard.jsx"
-
-// localStorage.clear
+import Records  from './Records.jsx'
 
 function App() {
+
   const [record, setRecord] = useState(() => {
     const savedRecord = localStorage.getItem("record")
     if(savedRecord){
       return JSON.parse(savedRecord)
     }
-    return[]
+    return []
   })
 
   function addRecord(newRecord){
     setRecord([...record, newRecord])
   }
 
-  // ローカルストレージに保存
   useEffect(() => {
     localStorage.setItem("record", JSON.stringify(record))
-  }, [record]);
+  }, [record])
 
-  // 重複する技名をまとめる
-  function getRecordsByName(name){
-    let result=[]
-    for(let i= 0; i<record.length; i++){
-      if(record[i].name == name){
-        result.push(record[i])
+  function deleteRecord(index){
+    let newRecord=[]
+    for(let i=0;i<record.length;i++){
+      if(i!==index){
+        newRecord.push(record[i])
       }
     }
-    return result
+    setRecord(newRecord)
   }
 
-  // 技名だけ一覧を作る
+  // 技名一覧
   function getSkillNames(){
-    let names = []
-    for(let i =0; i<record.length; i++){
+    let names=[]
+    for(let i=0;i<record.length;i++){
       if(!names.includes(record[i].name)){
         names.push(record[i].name)
       }
     }
     return names
   }
-  // 削除関数  
-  function deleteRecord(index){
-    let newRecord=[]
 
-    for(let i=0; i<record.length; i++){
-      if(i !== index){
-        newRecord.push(record[i])
-      }
-    }
+  let skills = getSkillNames()
 
-    setRecord(newRecord)
-  }
-
-  // グラフに変換
+  // グラフ用データ
   function makeGraphData(){
-    let dates = []
+    let dates=[]
 
     for(let i=0;i<record.length;i++){
       if(!dates.includes(record[i].date)){
@@ -68,18 +57,17 @@ function App() {
       }
     }
 
-    // 日付順に
     dates.sort()
 
-    let data = []
+    let data=[]
 
     for(let i=0;i<dates.length;i++){
 
-      let obj = {date: dates[i]}
+      let obj={date:dates[i]}
 
       for(let j=0;j<record.length;j++){
-        if(record[j].date === dates[i]){
-          obj[record[j].name] = record[j].score
+        if(record[j].date===dates[i]){
+          obj[record[j].name]=record[j].score
         }
       }
 
@@ -88,42 +76,55 @@ function App() {
 
     return data
   }
+
   let graphData = makeGraphData()
 
-  // 一覧表示
-  let list=[]
-  let skills = getSkillNames()
-
-  for(let i=0; i<skills.length; i++){
-    let skillName = skills[i]
-    let records = getRecordsByName(skillName)
-
-    list.push(
-      <h3 key={"skill"+i}>{skillName}</h3> 
-    )
-
-    for(let j=0; j<record.length; j++){
-
-      if(record[j].name === skillName){
-        list.push(
-          <div key={j}>
-            {record[j].date}：{record[j].score}回
-            <button onClick={()=>deleteRecord(j)}>削除</button>
-          </div>
-        )
-      }
-    }
-  }
-
   return(
-    <div>
-      <Dashboard record={record}/>
-      <Add onAdd={addRecord}/>
-      <h2>記録一覧</h2>
-      {list}
-      <h2>グラフ</h2>
-      <Graph data={graphData} skills={skills}/>
-    </div>
+
+  <BrowserRouter>
+
+  <nav>
+    <Link to="/">Dashboard</Link>
+    <Link to="/add">記録</Link>
+    <Link to="/records">一覧</Link>
+    <Link to="/graph">グラフ</Link>
+  </nav>
+
+  <Routes>
+
+  <Route
+    path="/"
+    element={<Dashboard record={record}/>}
+  />
+
+  <Route
+    path="/add"
+    element={<Add onAdd={addRecord}/>}
+  />
+
+  <Route
+    path="/records"
+    element={
+      <Records
+        record={record}
+        deleteRecord={deleteRecord}
+      />
+    }
+  />
+
+  <Route
+    path="/graph"
+    element={
+      <Graph
+        data={graphData}
+        skills={skills}
+      />
+    }
+  />
+
+  </Routes>
+
+  </BrowserRouter>
   )
 }
 
