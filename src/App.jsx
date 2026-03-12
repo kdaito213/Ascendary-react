@@ -84,7 +84,7 @@ function App() {
   <BrowserRouter>
 
   <nav>
-    <Link to="/">Dashboard</Link>
+    <Link to="/">ダッシュボード</Link>
     <Link to="/add">記録</Link>
     <Link to="/records">一覧</Link>
     <Link to="/graph">グラフ</Link>
