@@ -8,6 +8,8 @@ import Records  from './Records.jsx'
 
 function App() {
 
+  const [mode, setMode] = useState("training")
+
   const [record, setRecord] = useState(() => {
     const savedRecord = localStorage.getItem("record")
     if(savedRecord){
@@ -82,8 +84,31 @@ function App() {
   return(
 
   <BrowserRouter>
-  <header className="fixed-header"> 
+  <header className={mode === "training" ? "training-fixed-header" : "competition-fixed-header"}> 
     <nav className="header-content">
+      <div className="mode-switch">
+        <span className={mode === "training" ? "active" : ""}>
+          練習
+        </span>
+        <label className="switch">
+          <input 
+            type="checkbox" 
+            checked={mode === "competition"}
+            onChange={(e)=>{
+              if(e.target.checked){
+                setMode("competition")
+              }else{
+                setMode("training")
+              }
+            }}
+          />
+          <span className="slider"></span>
+        </label>
+        <span className={mode === "competition" ? "active" : ""}>
+          大会
+        </span>
+      </div>
+      
       <Link to="/">ダッシュボード</Link>
       <Link to="/add">記録</Link>
       <Link to="/records">一覧</Link>
@@ -95,7 +120,7 @@ function App() {
 
   <Route
     path="/"
-    element={<Dashboard record={record}/>}
+    element={<Dashboard record={record} mode={mode}/>}
   />
 
   <Route
