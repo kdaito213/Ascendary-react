@@ -1,4 +1,4 @@
-function Records({ record, deleteRecord }) {
+function RecordsTraining({ record, deleteRecord }) {
     let list = []
     let skills = []
 
@@ -36,4 +36,4 @@ function Records({ record, deleteRecord }) {
 
 }
 
-export default Records
+export default RecordsTraining

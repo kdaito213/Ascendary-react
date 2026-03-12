@@ -5,36 +5,67 @@ import AddTraining from './AddTraining.jsx'
 import AddCompetition from './AddCompetition.jsx'
 import Graph from "./Graph.jsx"
 import Dashboard from "./Dashboard.jsx"
-import Records  from './Records.jsx'
+import RecordsTraining  from './RecordsTraining.jsx'
+import RecordsCompetition from './RecordsCompetition.jsx'
 
 function App() {
 
   const [mode, setMode] = useState("training")
 
-  const [record, setRecord] = useState(() => {
-    const savedRecord = localStorage.getItem("record")
-    if(savedRecord){
-      return JSON.parse(savedRecord)
+  const [recordTraining, setRecordTraining] = useState(() => {
+    const savedRecordTraining = localStorage.getItem("recordTraining")
+    if(savedRecordTraining){
+      return JSON.parse(savedRecordTraining)
     }
     return []
   })
 
-  function addRecord(newRecord){
-    setRecord([...record, newRecord])
+  const [recordCompetition, setRecordCompetition] = useState(() => {
+    const savedRecordCompetition = localStorage.getItem("recordCompetition")
+    if(savedRecordCompetition){
+      return JSON.parse(savedRecordCompetition)
+    }
+    return []
+  })
+
+  const record = mode === "training"
+    ? recordTraining
+    : recordCompetition
+
+  function addRecordTraining(newRecord){
+    setRecordTraining([...recordTraining, newRecord])
+  }
+
+  function addRecordCompetition(newRecord){
+    setRecordCompetition([...recordCompetition, newRecord])
   }
 
   useEffect(() => {
-    localStorage.setItem("record", JSON.stringify(record))
-  }, [record])
+    localStorage.setItem("recordTraining", JSON.stringify(recordTraining))
+  }, [recordTraining])
 
-  function deleteRecord(index){
+  useEffect(() => {
+    localStorage.setItem("recordCompetition", JSON.stringify(recordCompetition))
+  }, [recordCompetition])
+
+  function deleteRecordTraining(index){
     let newRecord=[]
-    for(let i=0;i<record.length;i++){
+    for(let i=0;i<recordTraining.length;i++){
       if(i!==index){
-        newRecord.push(record[i])
+        newRecord.push(recordTraining[i])
       }
     }
-    setRecord(newRecord)
+    setRecordTraining(newRecord)
+  }
+
+  function deleteRecordCompetition(index){
+    let newRecord=[]
+    for(let i=0;i<recordCompetition.length;i++){
+      if(i!==index){
+        newRecord.push(recordCompetition[i])
+      }
+    }
+    setRecordCompetition(newRecord)
   }
 
   // 技名一覧
@@ -128,20 +159,20 @@ function App() {
     path="/add"
     element={
       mode==="training"
-        ?<AddTraining onAdd={addRecord}/>
-        :<AddCompetition onAdd={addRecord}/>
+        ?<AddTraining onAdd={addRecordTraining}/>
+        :<AddCompetition onAdd={addRecordCompetition}/>
     }
   />
 
   <Route
     path="/records"
     element={
-      <Records
-        record={record}
-        deleteRecord={deleteRecord}
-      />
+      mode==="training"
+        ?<RecordsTraining record={record} deleteRecord={deleteRecordTraining}/>
+        :<RecordsCompetition record={record} deleteRecord={deleteRecordCompetition}/>
     }
   />
+  
 
   <Route
     path="/graph"
