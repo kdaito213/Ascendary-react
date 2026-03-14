@@ -1,7 +1,7 @@
 import { useState , useEffect } from 'react'
 import './App.css'
 import Add from './Add.jsx'
-import Graph from "./Graph.jsx"
+import GraphTraining from "./GraphTraining.jsx"
 
 // localStorage.clear
 
@@ -120,7 +120,7 @@ function App() {
       <h2>記録一覧</h2>
       {list}
       <h2>グラフ</h2>
-      <Graph data={graphData} skills={skills}/>
+      <GraphTraining data={graphData} skills={skills}/>
     </div>
   )
 }
