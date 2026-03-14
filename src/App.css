@@ -209,6 +209,42 @@ button:last-child:hover{
   font-size:14px;
 }
 
+/* 大会記録一覧 */
+
+.competition-container{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.competition-card{
+  background:white;
+  border-radius:12px;
+  padding:20px;
+  box-shadow:0 3px 8px rgba(0,0,0,0.1);
+  border:1px solid #eee;
+}
+
+.competition-header{
+  margin-bottom:10px;
+}
+
+.rank{
+  font-weight:bold;
+  color:#e67e22;
+}
+
+.score-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin:10px 0;
+}
+
+.competition-card button{
+  margin-top:10px;
+}
+
 /* ===== カードUI ===== */
 
 .card{
