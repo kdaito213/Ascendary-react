@@ -28,6 +28,6 @@ function GraphTraining({ data, skills }) {
 
         </LineChart>
     )
-    }
+}
 
-export default Graph
+export default GraphTraining

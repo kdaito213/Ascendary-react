@@ -1,84 +1,107 @@
 import { useState , useEffect } from 'react'
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import './App.css'
-import Add from './Add.jsx'
+import AddTraining from './AddTraining.jsx'
+import AddCompetition from './AddCompetition.jsx'
 import GraphTraining from "./GraphTraining.jsx"
-
-// localStorage.clear
+import Dashboard from "./Dashboard.jsx"
+import RecordsTraining  from './RecordsTraining.jsx'
+import RecordsCompetition from './RecordsCompetition.jsx'
 
 function App() {
-  const [record, setRecord] = useState(() => {
-    const savedRecord = localStorage.getItem("record")
-    if(savedRecord){
-      return JSON.parse(savedRecord)
+
+  const [mode, setMode] = useState("training")
+
+  const [recordTraining, setRecordTraining] = useState(() => {
+    const savedRecordTraining = localStorage.getItem("recordTraining")
+    if(savedRecordTraining){
+      return JSON.parse(savedRecordTraining)
     }
-    return[]
+    return []
   })
 
-  function addRecord(newRecord){
-    setRecord([...record, newRecord])
+  const [recordCompetition, setRecordCompetition] = useState(() => {
+    const savedRecordCompetition = localStorage.getItem("recordCompetition")
+    if(savedRecordCompetition){
+      return JSON.parse(savedRecordCompetition)
+    }
+    return []
+  })
+
+  const record = mode === "training"
+    ? recordTraining
+    : recordCompetition
+
+  function addRecordTraining(newRecord){
+    setRecordTraining([...recordTraining, newRecord])
   }
 
-  // ローカルストレージに保存
-  useEffect(() => {
-    localStorage.setItem("record", JSON.stringify(record))
-  }, [record]);
+  function addRecordCompetition(newRecord){
+    setRecordCompetition([...recordCompetition, newRecord])
+  }
 
-  // 重複する技名をまとめる
-  function getRecordsByName(name){
-    let result=[]
-    for(let i= 0; i<record.length; i++){
-      if(record[i].name == name){
-        result.push(record[i])
+  useEffect(() => {
+    localStorage.setItem("recordTraining", JSON.stringify(recordTraining))
+  }, [recordTraining])
+
+  useEffect(() => {
+    localStorage.setItem("recordCompetition", JSON.stringify(recordCompetition))
+  }, [recordCompetition])
+
+  function deleteRecordTraining(index){
+    let newRecord=[]
+    for(let i=0;i<recordTraining.length;i++){
+      if(i!==index){
+        newRecord.push(recordTraining[i])
       }
     }
-    return result
+    setRecordTraining(newRecord)
   }
 
-  // 技名だけ一覧を作る
+  function deleteRecordCompetition(index){
+    let newRecord=[]
+    for(let i=0;i<recordCompetition.length;i++){
+      if(i!==index){
+        newRecord.push(recordCompetition[i])
+      }
+    }
+    setRecordCompetition(newRecord)
+  }
+
+  // 技名一覧
   function getSkillNames(){
-    let names = []
-    for(let i =0; i<record.length; i++){
+    let names=[]
+    for(let i=0;i<record.length;i++){
       if(!names.includes(record[i].name)){
         names.push(record[i].name)
       }
     }
     return names
   }
-  // 削除関数  
-  function deleteRecord(index){
-    let newRecord=[]
 
-    for(let i=0; i<record.length; i++){
-      if(i !== index){
-        newRecord.push(record[i])
+  let skills = getSkillNames()
+
+  // グラフ用データ
+  function makeGraphData(targetRecord){
+    let dates=[]
+
+    for(let i=0;i<targetRecord.length;i++){
+      if(!dates.includes(targetRecord[i].date)){
+        dates.push(targetRecord[i].date)
       }
     }
 
-    setRecord(newRecord)
-  }
-
-  // グラフに変換
-  function makeGraphData(){
-    let dates = []
-
-    for(let i=0;i<record.length;i++){
-      if(!dates.includes(record[i].date)){
-        dates.push(record[i].date)
-      }
-    }
-
-    // 日付順に
     dates.sort()
 
-    let data = []
+    let data=[]
 
     for(let i=0;i<dates.length;i++){
 
-      let obj = {date: dates[i]}
+      let obj={date:dates[i]}
 
-      for(let j=0;j<record.length;j++){
-        if(record[j].date === dates[i]){
-          obj[record[j].name] = record[j].score
+      for(let j=0;j<targetRecord.length;j++){
+        if(targetRecord[j].date===dates[i]){
+          obj[targetRecord[j].name]=targetRecord[j].score
         }
       }
 
@@ -87,41 +110,78 @@ function App() {
 
     return data
   }
-  let graphData = makeGraphData()
-
-  // 一覧表示
-  let list=[]
-  let skills = getSkillNames()
-
-  for(let i=0; i<skills.length; i++){
-    let skillName = skills[i]
-    let records = getRecordsByName(skillName)
-
-    list.push(
-      <h3 key={"skill"+i}>{skillName}</h3> 
-    )
-
-    for(let j=0; j<record.length; j++){
-
-      if(record[j].name === skillName){
-        list.push(
-          <div key={j}>
-            {record[j].date}：{record[j].score}回
-            <button onClick={()=>deleteRecord(j)}>削除</button>
-          </div>
-        )
-      }
-    }
-  }
 
   return(
-    <div>
-      <Add onAdd={addRecord}/>
-      <h2>記録一覧</h2>
-      {list}
-      <h2>グラフ</h2>
-      <GraphTraining data={graphData} skills={skills}/>
-    </div>
+
+  <BrowserRouter>
+  <header className={mode === "training" ? "training-fixed-header" : "competition-fixed-header"}> 
+    <nav className="header-content">
+      <div className="mode-switch">
+        <span className={mode === "training" ? "active" : ""}>
+          練習
+        </span>
+        <label className="switch">
+          <input 
+            type="checkbox" 
+            checked={mode === "competition"}
+            onChange={(e)=>{
+              if(e.target.checked){
+                setMode("competition")
+              }else{
+                setMode("training")
+              }
+            }}
+          />
+          <span className="slider"></span>
+        </label>
+        <span className={mode === "competition" ? "active" : ""}>
+          大会
+        </span>
+      </div>
+      
+      <Link to="/">ダッシュボード</Link>
+      <Link to="/add">記録</Link>
+      <Link to="/records">一覧</Link>
+      <Link to="/graph">グラフ</Link>
+    </nav>
+  </header>
+
+  <Routes>
+
+  <Route
+    path="/"
+    element={<Dashboard record={record} mode={mode}/>}
+  />
+
+  <Route
+    path="/add"
+    element={
+      mode==="training"
+        ?<AddTraining onAdd={addRecordTraining}/>
+        :<AddCompetition onAdd={addRecordCompetition}/>
+    }
+  />
+
+  <Route
+    path="/records"
+    element={
+      mode==="training"
+        ?<RecordsTraining record={record} deleteRecord={deleteRecordTraining}/>
+        :<RecordsCompetition record={record} deleteRecord={deleteRecordCompetition}/>
+    }
+  />
+  
+
+  <Route
+    path="/graph"
+    element={
+      <GraphTraining data={makeGraphData(recordTraining)} skills={skills}/>
+    }
+  />
+
+  </Routes>
+
+  </BrowserRouter>
   )
 }
 

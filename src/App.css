@@ -1,125 +1,296 @@
-/* 全体背景 */
+/* ===== 全体 ===== */
+
 body{
   margin:0;
-  background: linear-gradient(135deg,#050505,#0f0f1a,#050505);
-  color:#e6e6e6;
-  font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+  background:white;
+  color:black;
+  font-family: "Helvetica Neue", Arial, sans-serif;
 }
 
-/* アプリ全体 */
 #root{
-  max-width:1200px;
+  max-width:900px;
   margin:0 auto;
-  padding:40px;
-  text-align:center;
+  padding:40px 20px;
 }
 
-/* 見出し */
+/* ===== 見出し ===== */
+
 h1{
-  font-size:2.5rem;
-  letter-spacing:2px;
-  color:#00e5ff;
-  text-shadow:0 0 10px #00e5ff;
+  font-size:2rem;
+  font-weight:700;
+  margin-bottom:10px;
 }
 
 h2{
   margin-top:40px;
-  color:#8be9fd;
+  font-size:1.4rem;
 }
 
 h3{
   margin-top:25px;
-  color:#50fa7b;
+  font-size:1.2rem;
+  color:#1279df;
 }
 
-/* 入力欄 */
-input{
-  background:#0f172a;
-  border:1px solid #00e5ff55;
+/* ===== 固定ヘッダー ===== */
+
+.training-fixed-header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #1279df;
+  color: white;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.competition-fixed-header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #df1212;
+  color: white;
+  padding: 10px;
+  z-index: 1000;
+}
+
+.training-fixed-header a{
   color:white;
-  padding:8px 10px;
-  margin:5px;
+  text-decoration:none;
+  margin-right:20px;
+  font-weight:600;
+}
+
+.competition-fixed-header a{
+  color:rgb(240, 190, 8);
+  text-decoration:none;
+  margin-right:20px;
+  font-weight:600;
+}
+
+.header-content{
+  max-width:900px;
+  margin:0 auto;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.fixed-header a:hover{
+  text-decoration:underline;
+}
+
+/* ===== モード切替 ===== */
+.switch{
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input{
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.mode-switch{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.mode-switch span{
+  color:white;
+  font-weight:500;
+  transition: 0.3s;
+}
+
+.mode-switch .active{
+  color:rgb(169, 165, 165);
+  font-weight:700;
+}
+
+.slider{
+  position: absolute;
+  cursor:pointer;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background-color:#ccc;
+  transition:.4s;
+  border-radius:34px;
+}
+
+.slider:before{
+  position:absolute;
+  content:"";
+  height:26px;
+  width:26px;
+  left:4px;
+  bottom:4px;
+  background:white;
+  transition:.4s;
+  border-radius:50%;
+}
+
+input:checked + .slider{
+  background:#2196F3;
+}
+
+input:checked + .slider:before{
+  transform:translateX(26px);
+}
+
+/* ===== 入力フォーム ===== */
+
+input{
+  width:200px;
+  padding:10px;
+  margin:6px;
+  background:white;
+  border:1px solid #333;
   border-radius:6px;
-  transition:0.2s;
+  color:black;
+  font-size:14px;
 }
 
 input:focus{
   outline:none;
-  border:1px solid #00e5ff;
-  box-shadow:0 0 10px #00e5ff66;
+  border:1px solid #1279df;
 }
 
-/* ボタン */
+/* ===== ボタン ===== */
+
 button{
-  background:linear-gradient(135deg,#00e5ff,#0077ff);
+  padding:10px 16px;
+  margin:8px;
   border:none;
-  color:white;
-  padding:8px 14px;
-  margin-left:10px;
   border-radius:6px;
+  background:#00c853;
+  color:white;
+  font-weight:600;
   cursor:pointer;
-  font-weight:bold;
   transition:0.2s;
 }
 
 button:hover{
-  transform:translateY(-2px);
-  box-shadow:0 0 10px #00e5ff;
+  background:#00e676;
 }
 
-/* 削除ボタンだけ赤系 */
-button:nth-of-type(2){
-  background:linear-gradient(135deg,#ff3b3b,#ff0066);
+/* 削除ボタン */
+
+button:last-child{
+  background:#e53935;
 }
 
-/* 記録リスト */
-div{
-  margin-top:6px;
+button:last-child:hover{
+  background:#ff5252;
 }
 
-/* カードっぽい表示 */
-.card{
-  background:#0a0a12;
-  border:1px solid #00e5ff33;
+/* ===== 記録カード ===== */
+
+.record-card{
+  background:#1a1a1a;
   border-radius:10px;
+  padding:15px;
+  margin-top:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border:1px solid #2a2a2a;
+}
+
+.record-info{
+  font-size:14px;
+}
+
+/* 大会記録一覧 */
+
+.competition-container{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.competition-card{
+  background:white;
+  border-radius:12px;
   padding:20px;
+  box-shadow:0 3px 8px rgba(0,0,0,0.1);
+  border:1px solid #eee;
+}
+
+.competition-header{
+  margin-bottom:10px;
+}
+
+.rank{
+  font-weight:bold;
+  color:#e67e22;
+}
+
+.score-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  margin:10px 0;
+}
+
+.competition-card button{
+  margin-top:10px;
+}
+
+/* ===== カードUI ===== */
+
+.card{
+  background:#1a1a1a;
+  padding:20px;
+  border-radius:12px;
   margin-top:20px;
-  box-shadow:0 0 20px #00e5ff22;
+  border:1px solid #2a2a2a;
 }
 
-/* 右余白 */
-.mgr-10{
-  margin-right:10px;
+/* ===== グラフエリア ===== */
+
+.graph-area{
+  margin-top:30px;
+  padding:20px;
+  background:#1a1a1a;
+  border-radius:12px;
 }
 
-/* ロゴ */
-.logo{
-  height:6em;
-  padding:1.5em;
-  transition:filter 300ms;
+.dashboard-card{
+  background: white;
+  border: 1px solid #333;
+  border-radius: 12px;
+
+  padding: 20px;
+  margin-bottom: 30px;
+
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
 }
 
-.logo:hover{
-  filter:drop-shadow(0 0 2em #00e5ff);
-}
+/* ===== スマホ対応 ===== */
 
-/* アニメーション */
-@keyframes logo-spin{
-  from{
-    transform:rotate(0deg);
+@media(max-width:600px){
+
+  #root{
+    padding:20px;
   }
-  to{
-    transform:rotate(360deg);
-  }
-}
 
-@media (prefers-reduced-motion: no-preference){
-  a:nth-of-type(2) .logo{
-    animation:logo-spin infinite 20s linear;
+  input{
+    width:100%;
   }
-}
 
-/* 補助文字 */
-.read-the-docs{
-  color:#666;
+  .record-card{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:8px;
+  }
+
 }
