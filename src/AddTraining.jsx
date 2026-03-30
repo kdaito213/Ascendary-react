@@ -27,7 +27,7 @@ function Add({onAdd}){
                 value={name} 
                 onChange={(e) => setName(e.target.value)}
             />
-            <h2>回数</h2>
+            <h2>練習回数</h2>
             <input 
                 type="number" 
                 value={score} 

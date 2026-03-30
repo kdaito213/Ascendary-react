@@ -4,6 +4,7 @@ import './App.css'
 import AddTraining from './AddTraining.jsx'
 import AddCompetition from './AddCompetition.jsx'
 import GraphTraining from "./GraphTraining.jsx"
+import GraphCompetition from './GraphCompetition.jsx'
 import Dashboard from "./Dashboard.jsx"
 import RecordsTraining  from './RecordsTraining.jsx'
 import RecordsCompetition from './RecordsCompetition.jsx'
@@ -175,7 +176,9 @@ function App() {
   <Route
     path="/graph"
     element={
-      <GraphTraining data={makeGraphData(recordTraining)} skills={skills}/>
+      mode === "training"
+      ?<GraphTraining data={makeGraphData(recordTraining)} skills={skills}/>
+      :<GraphCompetition record={recordCompetition}/>
     }
   />
 
