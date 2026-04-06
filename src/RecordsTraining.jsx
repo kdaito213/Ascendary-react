@@ -18,9 +18,9 @@ function RecordsTraining({ record, deleteRecord }) {
         for (let j = 0; j < record.length; j++) {
             if (record[j].name === skillName) {
                 list.push(
-                    <div key={j}>
+                    <div key={record[j].id}>
                         {record[j].date}：{record[j].score}回
-                        <button onClick={() => deleteRecord(j)}>削除</button>
+                        <button onClick={() => deleteRecord(record[j].id)}>削除</button>
                     </div>
                 )
             }

@@ -1,4 +1,4 @@
-function Dashboard({record}){
+function DashboardTraining({record}){
     
     function todayRecords(){
         let todayRecord = []
@@ -67,4 +67,4 @@ function Dashboard({record}){
     )
 }
 
-export default Dashboard
+export default DashboardTraining
