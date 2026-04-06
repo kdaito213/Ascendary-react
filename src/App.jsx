@@ -9,65 +9,68 @@ import DashboardTraining from './DashboardTraining.jsx'
 import DashboardCompetition from './DashboardCompetition.jsx'
 import RecordsTraining  from './RecordsTraining.jsx'
 import RecordsCompetition from './RecordsCompetition.jsx'
+import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore'
+import { db } from './firebase.js'
 
 function App() {
 
+  useEffect(()=>{
+    async function fetchAll() {
+      const trainingSnapshot = await getDocs(collection(db,"training"))
+      const competitionSnapshot = await getDocs(collection(db,"competition"))
+
+      setRecordTraining(trainingSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+      })))
+
+      setRecordCompetition(competitionSnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+      })))
+    }
+    fetchAll()
+
+  },[])
+
   const [mode, setMode] = useState("training")
 
-  const [recordTraining, setRecordTraining] = useState(() => {
-    const savedRecordTraining = localStorage.getItem("recordTraining")
-    if(savedRecordTraining){
-      return JSON.parse(savedRecordTraining)
-    }
-    return []
-  })
+  const [recordTraining, setRecordTraining] = useState([])
 
-  const [recordCompetition, setRecordCompetition] = useState(() => {
-    const savedRecordCompetition = localStorage.getItem("recordCompetition")
-    if(savedRecordCompetition){
-      return JSON.parse(savedRecordCompetition)
-    }
-    return []
-  })
+  const [recordCompetition, setRecordCompetition] = useState([])
 
   const record = mode === "training"
     ? recordTraining
     : recordCompetition
 
-  function addRecordTraining(newRecord){
-    setRecordTraining([...recordTraining, newRecord])
+  async function addRecordTraining(newRecord){
+    const docRef = await addDoc(collection(db, "training"), newRecord)
+
+    setRecordTraining(prev => [
+      ...prev,
+      { id: docRef.id, ...newRecord }
+    ])
   }
 
-  function addRecordCompetition(newRecord){
-    setRecordCompetition([...recordCompetition, newRecord])
+  async function addRecordCompetition(newRecord){
+    const docRef = await addDoc(collection(db, "competition"), newRecord)
+
+    setRecordCompetition(prev => [
+      ...prev,
+      {id: docRef.id, ...newRecord}
+    ])
   }
 
-  useEffect(() => {
-    localStorage.setItem("recordTraining", JSON.stringify(recordTraining))
-  }, [recordTraining])
+  async function deleteRecordTraining(id){
+    await deleteDoc(doc(db, "training", id))
 
-  useEffect(() => {
-    localStorage.setItem("recordCompetition", JSON.stringify(recordCompetition))
-  }, [recordCompetition])
-
-  function deleteRecordTraining(index){
-    let newRecord=[]
-    for(let i=0;i<recordTraining.length;i++){
-      if(i!==index){
-        newRecord.push(recordTraining[i])
-      }
-    }
-    setRecordTraining(newRecord)
+    setRecordTraining(prev => prev.filter(r => r.id !== id))
   }
 
-  function deleteRecordCompetition(index){
-    let newRecord=[]
-    for(let i=0;i<recordCompetition.length;i++){
-      if(i!==index){
-        newRecord.push(recordCompetition[i])
-      }
-    }
-    setRecordCompetition(newRecord)
+  async function deleteRecordCompetition(id){
+    await deleteDoc(doc(db, "competition",id))
+
+    setRecordCompetition(prev => prev.filter(r => r.id !== id))
   }
 
   // 技名一覧
@@ -93,7 +96,7 @@ function App() {
       }
     }
 
-    dates.sort()
+    dates.sort((a,b)=> new Date(a) - new Date(b))
 
     let data=[]
 
@@ -188,7 +191,6 @@ function App() {
   />
 
   </Routes>
-
   </BrowserRouter>
   )
 }
