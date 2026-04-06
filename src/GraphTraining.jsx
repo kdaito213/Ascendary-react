@@ -8,7 +8,9 @@ import {
     Legend
 } from "recharts";
 
-function GraphTraining({ data, skills }) {
+function
+
+function GraphTraining({record}) {
 
     return (
         <LineChart width={600} height={300} data={data}>
