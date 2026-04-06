@@ -11,13 +11,27 @@ import RecordsTraining  from './RecordsTraining.jsx'
 import RecordsCompetition from './RecordsCompetition.jsx'
 import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore'
 import { db } from './firebase.js'
+import { auth } from './firebase.js'
+import {
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+} from "firebase/auth"
 
 function App() {
 
+  const [user, setUser] = useState(null)
+
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
   useEffect(()=>{
+    if(!user) return
+
     async function fetchAll() {
-      const trainingSnapshot = await getDocs(collection(db,"training"))
-      const competitionSnapshot = await getDocs(collection(db,"competition"))
+      const trainingSnapshot = await getDocs(collection(db, "users", user.uid, "training"))
+      const competitionSnapshot = await getDocs(collection(db, "users", user.uid, "competition"))
 
       setRecordTraining(trainingSnapshot.docs.map(doc => ({
           id: doc.id,
@@ -31,7 +45,14 @@ function App() {
     }
     fetchAll()
 
-  },[])
+  },[user])
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser)
+    })
+    return () => unsubscribe()
+  }, [])
 
   const [mode, setMode] = useState("training")
 
@@ -44,7 +65,7 @@ function App() {
     : recordCompetition
 
   async function addRecordTraining(newRecord){
-    const docRef = await addDoc(collection(db, "training"), newRecord)
+    const docRef = await addDoc(collection(db, "users", user.uid, "training"), newRecord)
 
     setRecordTraining(prev => [
       ...prev,
@@ -53,7 +74,7 @@ function App() {
   }
 
   async function addRecordCompetition(newRecord){
-    const docRef = await addDoc(collection(db, "competition"), newRecord)
+    const docRef = await addDoc(collection(db, "users", user.uid, "competition"), newRecord)
 
     setRecordCompetition(prev => [
       ...prev,
@@ -62,13 +83,13 @@ function App() {
   }
 
   async function deleteRecordTraining(id){
-    await deleteDoc(doc(db, "training", id))
+    await deleteDoc(doc(db, "users", user.uid, "training", id))
 
     setRecordTraining(prev => prev.filter(r => r.id !== id))
   }
 
   async function deleteRecordCompetition(id){
-    await deleteDoc(doc(db, "competition",id))
+    await deleteDoc(doc(db,"users", user.uid,  "competition",id))
 
     setRecordCompetition(prev => prev.filter(r => r.id !== id))
   }
@@ -116,8 +137,39 @@ function App() {
     return data
   }
 
-  return(
+  if (!user) {
+    return (
+      <div>
+        <h2>ログイン</h2>
 
+        <input
+          type="email"
+          placeholder="email"
+          onChange={(e)=>setEmail(e.target.value)}
+        />
+
+        <input
+          type="password"
+          placeholder="password"
+          onChange={(e)=>setPassword(e.target.value)}
+        />
+
+        <button onClick={async ()=>{
+          await signInWithEmailAndPassword(auth, email, password)
+        }}>
+          ログイン
+        </button>
+
+        <button onClick={async ()=>{
+          await createUserWithEmailAndPassword(auth, email, password)
+        }}>
+          新規登録
+        </button>
+      </div>
+    )
+  }
+
+  return(
   <BrowserRouter>
   <header className={mode === "training" ? "training-fixed-header" : "competition-fixed-header"}> 
     <nav className="header-content">
@@ -148,6 +200,7 @@ function App() {
       <Link to="/add">記録</Link>
       <Link to="/records">一覧</Link>
       <Link to="/graph">グラフ</Link>
+      <button onClick={()=>signOut(auth)}>ログアウト</button>
     </nav>
   </header>
 
