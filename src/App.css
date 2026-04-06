@@ -73,7 +73,7 @@ h3{
 .header-content{
   max-width:900px;
   margin:0 auto;
-
+  position: relative;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -163,6 +163,21 @@ input:focus{
   outline:none;
   border:1px solid #1279df;
 }
+
+/* ===== ハンバーガー ===== */
+.hamburger{
+  display:none;
+  font-size:28px;
+  cursor:pointer;
+}
+
+/* ナビ */
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
 
 /* ===== ボタン ===== */
 
@@ -276,21 +291,103 @@ button:last-child:hover{
 }
 
 /* ===== スマホ対応 ===== */
-
 @media(max-width:600px){
 
+  /* 全体余白調整 */
   #root{
-    padding:20px;
+    padding:80px 12px 20px; /* ヘッダー分余白追加 */
+    max-width:100%;
   }
 
+  /* ヘッダーを縦にする */
+  .header-content{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+  }
+
+  /* ナビリンク折り返し */
+  .header-content a{
+    margin-right:10px;
+    font-size:14px;
+  }
+
+  /* モード切替も整える */
+  .mode-switch{
+    width:100%;
+    justify-content:space-between;
+  }
+
+  /* 入力フォーム */
   input{
     width:100%;
+    font-size:16px; /* iPhoneズーム防止 */
   }
 
+  /* ボタンを縦並び */
+  button{
+    width:100%;
+    margin:6px 0;
+  }
+
+  /* 記録カード */
   .record-card{
     flex-direction:column;
     align-items:flex-start;
     gap:8px;
   }
 
+  /* スコアグリッド1列に */
+  .score-grid{
+    grid-template-columns:1fr;
+  }
+
+  /* グラフ横スクロール対応 */
+  .graph-area{
+    overflow-x:auto;
+  }
+
+  /* ダッシュボードカード余白 */
+  .dashboard-card{
+    padding:15px;
+  }
+
+  .hamburger{
+    display:block;
+  }
+
+  .nav-links{
+    position:absolute;
+    top:60px;
+    right:0;
+    width:200px;
+
+    flex-direction:column;
+    align-items:flex-start;
+
+    background:white;
+    color:black;
+
+    padding:15px;
+
+    border-radius:10px 0 0 10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+
+    transform:translateX(100%);
+    transition:0.3s;
+  }
+
+  .nav-links.open{
+    transform:translateX(0);
+  }
+
+  .nav-links a{
+    color:black;
+    width:100%;
+    padding:10px 0;
+  }
+
+  .nav-links button{
+    width:100%;
+  }
 }

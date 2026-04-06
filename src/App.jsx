@@ -60,6 +60,8 @@ function App() {
 
   const [recordCompetition, setRecordCompetition] = useState([])
 
+  const [menuOpen, setMenuOpen] = useState(false)
+
   const record = mode === "training"
     ? recordTraining
     : recordCompetition
@@ -171,36 +173,39 @@ function App() {
 
   return(
   <BrowserRouter>
-  <header className={mode === "training" ? "training-fixed-header" : "competition-fixed-header"}> 
+  <header className={mode === "training" ? "training-fixed-header" : "competition-fixed-header"}>
     <nav className="header-content">
+
+      {/* 左：モード */}
       <div className="mode-switch">
-        <span className={mode === "training" ? "active" : ""}>
-          練習
-        </span>
+        <span className={mode === "training" ? "active" : ""}>練習</span>
         <label className="switch">
           <input 
             type="checkbox" 
             checked={mode === "competition"}
             onChange={(e)=>{
-              if(e.target.checked){
-                setMode("competition")
-              }else{
-                setMode("training")
-              }
+              setMode(e.target.checked ? "competition" : "training")
             }}
           />
           <span className="slider"></span>
         </label>
-        <span className={mode === "competition" ? "active" : ""}>
-          大会
-        </span>
+        <span className={mode === "competition" ? "active" : ""}>大会</span>
       </div>
-      
-      <Link to="/">ダッシュボード</Link>
-      <Link to="/add">記録</Link>
-      <Link to="/records">一覧</Link>
-      <Link to="/graph">グラフ</Link>
-      <button onClick={()=>signOut(auth)}>ログアウト</button>
+
+      {/* ハンバーガー */}
+      <div className="hamburger" onClick={()=>setMenuOpen(!menuOpen)}>
+        ☰
+      </div>
+
+      {/* メニュー */}
+      <div className={`nav-links ${menuOpen ? "open" : ""}`}>
+        <Link to="/" onClick={()=>setMenuOpen(false)}>ダッシュボード</Link>
+        <Link to="/add" onClick={()=>setMenuOpen(false)}>記録</Link>
+        <Link to="/records" onClick={()=>setMenuOpen(false)}>一覧</Link>
+        <Link to="/graph" onClick={()=>setMenuOpen(false)}>グラフ</Link>
+        <button onClick={()=>signOut(auth)}>ログアウト</button>
+      </div>
+
     </nav>
   </header>
 
