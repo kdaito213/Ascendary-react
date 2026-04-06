@@ -41,7 +41,7 @@ h3{
   width: 100%;
   background-color: #1279df;
   color: white;
-  padding: 10px;
+  padding: 10px 0;
   z-index: 1000;
 }
 
@@ -52,7 +52,7 @@ h3{
   width: 100%;
   background-color: #df1212;
   color: white;
-  padding: 10px;
+  padding: 10px 0;
   z-index: 1000;
 }
 
@@ -74,6 +74,7 @@ h3{
   max-width:900px;
   margin:0 auto;
   position: relative;
+  padding: 0 12px;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -107,6 +108,7 @@ h3{
 .mode-switch span{
   color:white;
   font-weight:500;
+  font-size: 12px;
   transition: 0.3s;
 }
 
@@ -291,6 +293,13 @@ button:last-child:hover{
   box-shadow: 0 0 10px rgba(0,0,0,0.6);
 }
 
+.header-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  width: 100%;
+}
+
 /* ===== スマホ対応 ===== */
 @media(max-width:600px){
 
@@ -300,11 +309,16 @@ button:last-child:hover{
     max-width:100%;
   }
 
+  .header-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+
   /* ヘッダーを縦にする */
   .header-content{
     flex-direction:column;
-    align-items:flex-start;
-    gap:10px;
+    align-items:stretch;
   }
 
   /* ナビリンク折り返し */
@@ -313,10 +327,30 @@ button:last-child:hover{
     font-size:14px;
   }
 
+  .switch{
+    width:50px;
+    height:28px;
+  }
+
   /* モード切替も整える */
   .mode-switch{
-    width:100%;
-    justify-content:space-between;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    justify-content:flex-start; 
+  }
+
+  .mode-switch span{
+    white-space:nowrap; /* 改行防止 */
+  }
+
+  .slider:before{
+    width:20px;
+    height:20px;
+  }
+
+  input:checked + .slider:before{
+    transform:translateX(22px);
   }
 
   /* 入力フォーム */
@@ -355,6 +389,7 @@ button:last-child:hover{
 
   .hamburger{
     display:block;
+    flex-shrink: 0;
   }
 
   .nav-links{

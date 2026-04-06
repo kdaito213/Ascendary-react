@@ -176,28 +176,29 @@ function App() {
   <header className={mode === "training" ? "training-fixed-header" : "competition-fixed-header"}>
     <nav className="header-content">
 
-      {/* 左：モード */}
-      <div className="mode-switch">
-        <span className={mode === "training" ? "active" : ""}>練習</span>
-        <label className="switch">
-          <input 
-            type="checkbox" 
-            checked={mode === "competition"}
-            onChange={(e)=>{
-              setMode(e.target.checked ? "competition" : "training")
-            }}
-          />
-          <span className="slider"></span>
-        </label>
-        <span className={mode === "competition" ? "active" : ""}>大会</span>
+      {/* 上段 */}
+      <div className="header-top">
+        <div className="mode-switch">
+          <span className={mode === "training" ? "active" : ""}>練習</span>
+          <label className="switch">
+            <input 
+              type="checkbox" 
+              checked={mode === "competition"}
+              onChange={(e)=>{
+                setMode(e.target.checked ? "competition" : "training")
+              }}
+            />
+            <span className="slider"></span>
+          </label>
+          <span className={mode === "competition" ? "active" : ""}>大会</span>
+        </div>
+
+        <div className="hamburger" onClick={()=>setMenuOpen(!menuOpen)}>
+          ☰
+        </div>
       </div>
 
-      {/* ハンバーガー */}
-      <div className="hamburger" onClick={()=>setMenuOpen(!menuOpen)}>
-        ☰
-      </div>
-
-      {/* メニュー */}
+      {/* メニュー（下段） */}
       <div className={`nav-links ${menuOpen ? "open" : ""}`}>
         <Link to="/" onClick={()=>setMenuOpen(false)}>ダッシュボード</Link>
         <Link to="/add" onClick={()=>setMenuOpen(false)}>記録</Link>
