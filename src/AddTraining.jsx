@@ -1,19 +1,34 @@
 import { useState } from "react";
 
-function Add({onAdd}){
+function Add({onAdd, skills = []}){
     const [date , setDate] = useState('')
     const [name , setName] = useState('')
-    const [score , setScore] = useState()
+    const [score , setScore] = useState('')
 
     function handleAdd(){
-        onAdd({date: date, name: name, score: score})
+        if(!date || !name || score === '') return
+        
+        onAdd({date: date, name: name, score: Number(score)})
         setDate('')
         setName('')
-        setScore(0)
+        setScore('')
     }
 
     return (
         <div>
+            <h2>ワンタップ入力</h2>
+
+            <div>
+                {skills.map((skill)=>(
+                    <button
+                        key={skill}
+                        onClick={()=> setName(skill)}
+                    >
+                        {skill}
+                    </button>
+                ))}
+            </div>
+
             <h1>技の記録</h1>
             <h2>記録日</h2>
             <input 

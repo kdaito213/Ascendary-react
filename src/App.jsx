@@ -225,8 +225,8 @@ function App() {
     path="/add"
     element={
       mode==="training"
-        ?<AddTraining onAdd={addRecordTraining}/>
-        :<AddCompetition onAdd={addRecordCompetition}/>
+        ?<AddTraining onAdd={addRecordTraining} skills={skills}/>
+        :<AddCompetition onAdd={addRecordCompetition} skills={skills}/>
     }
   />
 
