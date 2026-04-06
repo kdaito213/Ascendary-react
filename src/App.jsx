@@ -185,7 +185,7 @@ function App() {
     path="/graph"
     element={
       mode === "training"
-      ?<GraphTraining data={makeGraphData(recordTraining)} skills={skills}/>
+      ?<GraphTraining record={recordTraining}/>
       :<GraphCompetition record={recordCompetition}/>
     }
   />
