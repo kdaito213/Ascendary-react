@@ -5,7 +5,8 @@ import {
     YAxis,
     CartesianGrid,
     Tooltip,
-    Legend
+    Legend,
+    ResponsiveContainer 
 } from "recharts";
 
 function makeGraphDataBySkill(record, skill){
@@ -33,7 +34,7 @@ function GraphTraining({record}) {
         {skills.map((skill) => (
             <div key={skill} style={{marginBottom: "30px"}}>
                 <h3>{skill}</h3>
-                <div style={{ width: "100%", height: "250px" }}>
+                <div style={{ width: "100%", aspectRatio: "2 / 1" }}>
                     <ResponsiveContainer>
                         <LineChart
                             data={makeGraphDataBySkill(record, skill)}
