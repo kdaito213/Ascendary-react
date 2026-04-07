@@ -16,9 +16,9 @@ import { db } from "./firebase"
 function Team({ user }) {
     const [teamName, setTeamName] = useState("")
     const [teamIdInput, setTeamIdInput] = useState("")
-    const [myTeam, setMyTeam] = useState(null)
-    const [members, setMembers] = useState([])
+    const [myTeam, setMyTeam] = useState([])
     const [newName, setNewName] = useState("")
+    const [membersMap, setMembersMap] = useState({})
 
     // チーム新規作成
     async function createTeam() {
@@ -53,17 +53,23 @@ function Team({ user }) {
     }
 
     // メンバー取得
-    async function fetchMembers(team) {
-        const promises = team.members.map(async (uid) => {
-            const snap = await getDoc(doc(db, "users", uid))
-            return snap.exists() ? { uid, ...snap.data() } : null
-        })
+    async function fetchMembersForTeams(teams) {
+        const result = {}
 
-        let list = (await Promise.all(promises)).filter(Boolean)
+        for (const team of teams) {
+            const promises = team.members.map(async (uid) => {
+                const snap = await getDoc(doc(db, "users", uid))
+                return snap.exists() ? { uid, ...snap.data() } : null
+            })
 
-        list.sort((a, b) => a.uid === user.uid ? -1 : 1)
+            let list = (await Promise.all(promises)).filter(Boolean)
 
-        setMembers(list)
+            list.sort((a, b) => a.uid === user.uid ? -1 : 1)
+
+            result[team.id] = list
+        }
+
+        setMembersMap(result)
     }
 
     // 自分のチーム取得
@@ -75,13 +81,14 @@ function Team({ user }) {
 
         const snap = await getDocs(q)
 
-        if (!snap.empty) {
-            const docSnap = snap.docs[0]
-            const data = docSnap.data()
-            const team = { id: docSnap.id, ...data }
+        const teams = snap.docs.map(docSnap => ({
+            id: docSnap.id,
+            ...docSnap.data()
+        }))
+        setMyTeam(teams)
 
-            setMyTeam(team)
-            fetchMembers(team)
+        if (teams.length > 0) {
+            fetchMembersForTeams(teams)
         }
     }
 
@@ -132,46 +139,57 @@ function Team({ user }) {
             <div>
                 <h2>自分のチーム</h2>
 
-                {myTeam ? (
-                    <>
-                        <div>
-                            <p>チーム名: {myTeam.name}</p>
-                            <p>チームID: {myTeam.id}</p>
-                            <p>メンバー数: {myTeam.members.length}</p>
+                {myTeam.length > 0 ? (
+                    myTeam.map(team => {
+                        const members = membersMap[team.id] || []
 
-                            <h3>メンバー一覧</h3>
-                            {members.map((m) => {
-                                const days = getInactiveDays(m.lastActive)
+                        return (
+                            <div key={team.id} style={{marginBottom: "30px"}} className="card">
+                                <p>チーム名: {team.name}</p>
+                                <p>チームID: {team.id}</p>
+                                <button onClick={() => {
+                                    navigator.clipboard.writeText(team.id)
+                                    alert("コピーしました")
+                                }}>
+                                    IDコピー
+                                </button>
+                                <p>メンバー数: {team.members.length}</p>
+                                {members.length === 0 && <p>メンバーなし</p>}
 
-                                return (
-                                    <div key={m.uid}>
-                                        <p>
-                                            {m.username || m.email}
-                                            {m.uid === user.uid && "(自分)"}
-                                        </p>
-                                        <p>最終記録: {m.lastActive || "なし"}</p>
-                                        <p>放置日数: {days}日</p>
-                                        {days >= 3 && (
-                                            <p style={{ color: "red" }}>アウト</p>
-                                        )}
-                                    </div>
-                                )
-                            })}
-                        </div>
+                                <h3>メンバー一覧</h3>
+                                {members.map((m) => {
+                                    const days = getInactiveDays(m.lastActive)
 
-                        {/* チーム状態 */}
-                        <div>
-                            {isTeamOut(members) ? (
-                                <h2 style={{ color: "red" }}>チーム失敗</h2>
-                            ) : (
-                                <h2 style={{ color: "green" }}>継続中</h2>
-                            )}
-                        </div>
-                    </>
+                                    return (
+                                        <div key={m.uid}>
+                                            <p>
+                                                {m.username || m.email}
+                                                {m.uid === user.uid && "(自分)"}
+                                            </p>
+                                            <p>最終記録: {m.lastActive || "なし"}</p>
+                                            <p>放置日数: {days}日</p>
+                                            {days >= 3 && (
+                                                <p style={{ color: "red" }}>アウト</p>
+                                            )}
+                                            
+                                            {index !== members.length - 1 && <hr />}
+                                        </div>
+                                    )
+                                })}
+
+                                <div>
+                                    {isTeamOut(members) ? (
+                                        <h3 style={{ color: "red" }}>チーム失敗</h3>
+                                    ) : (
+                                        <h3 style={{ color: "green" }}>継続中</h3>
+                                    )}
+                                </div>
+                            </div>
+                        )
+                    })
                 ) : (
                     <p>未所属</p>
                 )}
-
 
                 <h2>ユーザー名変更</h2>
                 <input
@@ -194,7 +212,7 @@ function Team({ user }) {
                 </button>
             </div>
         </div>
-            )
+    )
 }
 
-            export default Team
+export default Team

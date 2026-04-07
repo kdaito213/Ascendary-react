@@ -152,7 +152,7 @@ function App() {
       let obj={date:dates[i]}
 
       for(let j=0;j<targetRecord.length;j++){
-        if(targetRecord[j].date===dates[i]){
+        if(targetRecord[j].date===dates[i] && targetRecord[j].score){
           obj[targetRecord[j].name]=targetRecord[j].score
         }
       }

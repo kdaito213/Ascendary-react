@@ -37,7 +37,7 @@ function RecordsCompetition({ record, deleteRecord }) {
                             <p>減点 {record[j].deduction}</p>
                         </div>
 
-                        <button onClick={() => deleteRecord(j)}>削除</button>
+                        <button onClick={() => deleteRecord(record[j].id)}>削除</button>
 
                     </div>
                 )
