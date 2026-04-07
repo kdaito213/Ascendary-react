@@ -1,10 +1,13 @@
 /* ===== 全体 ===== */
 
+*{ box-sizing: border-box;}
+
 body{
   margin:0;
   background:white;
   color:black;
   font-family: "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden;
 }
 
 #root{
@@ -152,9 +155,9 @@ input:checked + .slider:before{
 /* ===== 入力フォーム ===== */
 
 input{
-  width:200px;
+  width:100%;
   padding:10px;
-  margin:6px;
+  margin:6px 0;
   background:white;
   border:1px solid #333;
   border-radius:6px;
@@ -282,6 +285,11 @@ button:last-child:hover{
   border-radius:12px;
 }
 
+.graph-area canvas,
+.graph-area svg{
+  max-width:100%;
+}
+
 .dashboard-card{
   background: white;
   border: 1px solid #333;
@@ -380,6 +388,13 @@ button:last-child:hover{
   /* グラフ横スクロール対応 */
   .graph-area{
     overflow-x:auto;
+    max-width: 100%;
+    padding: 10px;
+  }
+
+  .graph-area > *{
+    width:100% !important;
+    height:auto !important;
   }
 
   /* ダッシュボードカード余白 */
