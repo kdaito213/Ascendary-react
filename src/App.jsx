@@ -9,6 +9,7 @@ import DashboardTraining from './DashboardTraining.jsx'
 import DashboardCompetition from './DashboardCompetition.jsx'
 import RecordsTraining  from './RecordsTraining.jsx'
 import RecordsCompetition from './RecordsCompetition.jsx'
+import Team from './Team.jsx'
 import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore'
 import { db } from './firebase.js'
 import { auth } from './firebase.js'
@@ -204,6 +205,7 @@ function App() {
         <Link to="/add" onClick={()=>setMenuOpen(false)}>記録</Link>
         <Link to="/records" onClick={()=>setMenuOpen(false)}>一覧</Link>
         <Link to="/graph" onClick={()=>setMenuOpen(false)}>グラフ</Link>
+        <Link to="/team" onClick={()=> setMenuOpen(false)}>チーム</Link>
         <button onClick={()=>signOut(auth)}>ログアウト</button>
       </div>
 
@@ -247,6 +249,11 @@ function App() {
       ?<GraphTraining record={recordTraining}/>
       :<GraphCompetition record={recordCompetition}/>
     }
+  />
+
+  <Route
+    path="/team"
+    element={<Team user={user}/>}
   />
 
   </Routes>
