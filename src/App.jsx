@@ -10,7 +10,15 @@ import DashboardCompetition from './DashboardCompetition.jsx'
 import RecordsTraining  from './RecordsTraining.jsx'
 import RecordsCompetition from './RecordsCompetition.jsx'
 import Team from './Team.jsx'
-import { collection, getDocs, addDoc, deleteDoc, doc } from 'firebase/firestore'
+import { 
+  collection, 
+  getDocs, 
+  addDoc, 
+  deleteDoc, 
+  doc, 
+  setDoc,
+  updateDoc 
+} from 'firebase/firestore'
 import { db } from './firebase.js'
 import { auth } from './firebase.js'
 import {
@@ -49,8 +57,15 @@ function App() {
   },[user])
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser)
+    
+      if(currentUser){
+        await setDoc(doc(db, "users", currentUser.uid), {
+          email: currentUser.email,
+          username: currentUser.email.split("@")[0] //仮ユーザー名
+        },{merge: true})
+      }
     })
     return () => unsubscribe()
   }, [])
@@ -70,6 +85,10 @@ function App() {
   async function addRecordTraining(newRecord){
     const docRef = await addDoc(collection(db, "users", user.uid, "training"), newRecord)
 
+    await updateDoc(doc(db, "users", user.uid),{
+      lastActive: new Date().toISOString().split("T")[0]
+    })
+
     setRecordTraining(prev => [
       ...prev,
       { id: docRef.id, ...newRecord }
@@ -78,6 +97,10 @@ function App() {
 
   async function addRecordCompetition(newRecord){
     const docRef = await addDoc(collection(db, "users", user.uid, "competition"), newRecord)
+
+    await updateDoc(doc(db, "users", user.uid), {
+      lastActive: new Date().toISOString().split("T")[0]
+    })
 
     setRecordCompetition(prev => [
       ...prev,

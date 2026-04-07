@@ -5,19 +5,24 @@ import {
     doc,
     updateDoc,
     arrayUnion,
-    getDoc
+    getDoc,
+    getDocs,
+    query,
+    where
 } from "firebase/firestore"
 
 import { db } from "./firebase"
 
-function Team({user}){
+function Team({ user }) {
     const [teamName, setTeamName] = useState("")
     const [teamIdInput, setTeamIdInput] = useState("")
     const [myTeam, setMyTeam] = useState(null)
+    const [members, setMembers] = useState([])
+    const [newName, setNewName] = useState("")
 
     // チーム新規作成
     async function createTeam() {
-        if(!teamName) return
+        if (!teamName) return
 
         const docRef = await addDoc(collection(db, "teams"), {
             name: teamName,
@@ -33,7 +38,7 @@ function Team({user}){
 
     // チーム参加
     async function joinTeam() {
-        if(!teamIdInput) return
+        if (!teamIdInput) return
 
         const ref = doc(db, "teams", teamIdInput)
 
@@ -46,24 +51,54 @@ function Team({user}){
         setTeamIdInput("")
         alert("参加完了")
     }
-    
-    // 自分のチーム取得（簡易版）
-    async function fetchMyTeam() {
-        const q = collection(db, "teams")
 
-        const all = await getDoc(q)
-    
-        let found = null
-    
-        all.forEach(docSnap => {
-            const data = docSnap.data()
-            if (data.members.includes(user.uid)) {
-                found = { id: docSnap.id, ...data }
-            }
+    // メンバー取得
+    async function fetchMembers(team) {
+        const promises = team.members.map(async (uid) => {
+            const snap = await getDoc(doc(db, "users", uid))
+            return snap.exists() ? { uid, ...snap.data() } : null
         })
-        setMyTeam(found)
+
+        let list = (await Promise.all(promises)).filter(Boolean)
+
+        list.sort((a, b) => a.uid === user.uid ? -1 : 1)
+
+        setMembers(list)
     }
-    
+
+    // 自分のチーム取得
+    async function fetchMyTeam() {
+        const q = query(
+            collection(db, "teams"),
+            where("members", "array-contains", user.uid)
+        )
+
+        const snap = await getDocs(q)
+
+        if (!snap.empty) {
+            const docSnap = snap.docs[0]
+            const data = docSnap.data()
+            const team = { id: docSnap.id, ...data }
+
+            setMyTeam(team)
+            fetchMembers(team)
+        }
+    }
+
+    function getInactiveDays(lastActive) {
+        if (!lastActive) return 999
+
+        const today = new Date()
+        const last = new Date(lastActive)
+
+        const diff = (today - last) / (1000 * 60 * 60 * 24)
+        return Math.floor(diff)
+    }
+
+    function isTeamOut(members) {
+        return members.some(m => getInactiveDays(m.lastActive) >= 3)
+    }
+
     useEffect(() => {
         if (user) fetchMyTeam()
     }, [user])
@@ -75,9 +110,9 @@ function Team({user}){
             {/*作成*/}
             <div>
                 <h2>チーム新規作成</h2>
-                <input 
+                <input
                     value={teamName}
-                    onChange={(e)=> setTeamName(e.target.value)}
+                    onChange={(e) => setTeamName(e.target.value)}
                     placeholder="チーム名"
                 />
                 <button onClick={createTeam}>作成</button>
@@ -98,17 +133,68 @@ function Team({user}){
                 <h2>自分のチーム</h2>
 
                 {myTeam ? (
-                <div>
-                    <p>チーム名: {myTeam.name}</p>
-                    <p>チームID: {myTeam.id}</p>
-                    <p>メンバー数: {myTeam.members.length}</p>
-                </div>
+                    <>
+                        <div>
+                            <p>チーム名: {myTeam.name}</p>
+                            <p>チームID: {myTeam.id}</p>
+                            <p>メンバー数: {myTeam.members.length}</p>
+
+                            <h3>メンバー一覧</h3>
+                            {members.map((m) => {
+                                const days = getInactiveDays(m.lastActive)
+
+                                return (
+                                    <div key={m.uid}>
+                                        <p>
+                                            {m.username || m.email}
+                                            {m.uid === user.uid && "(自分)"}
+                                        </p>
+                                        <p>最終記録: {m.lastActive || "なし"}</p>
+                                        <p>放置日数: {days}日</p>
+                                        {days >= 3 && (
+                                            <p style={{ color: "red" }}>アウト</p>
+                                        )}
+                                    </div>
+                                )
+                            })}
+                        </div>
+
+                        {/* チーム状態 */}
+                        <div>
+                            {isTeamOut(members) ? (
+                                <h2 style={{ color: "red" }}>チーム失敗</h2>
+                            ) : (
+                                <h2 style={{ color: "green" }}>継続中</h2>
+                            )}
+                        </div>
+                    </>
                 ) : (
-                <p>未所属</p>
+                    <p>未所属</p>
                 )}
+
+
+                <h2>ユーザー名変更</h2>
+                <input
+                    value={newName}
+                    onChange={(e) => setNewName(e.target.value)}
+                    placeholder="ユーザー名"
+                />
+
+                <button onClick={async () => {
+                    if (!newName.trim()) return
+
+                    await updateDoc(doc(db, "users", user.uid), {
+                        username: newName
+                    })
+                    await fetchMyTeam()
+                    setNewName("")
+                    alert("変更完了")
+                }}>
+                    変更
+                </button>
             </div>
         </div>
-    )
+            )
 }
 
-export default Team
+            export default Team
