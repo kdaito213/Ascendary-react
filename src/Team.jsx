@@ -168,7 +168,7 @@ function Team({ user }) {
                                 {members.length === 0 && <p>メンバーなし</p>}
 
                                 <h3>メンバー一覧</h3>
-                                {members.map((m) => {
+                                {members.map((m,index) => {
                                     const days = getInactiveDays(m.lastActive)
 
                                     return (
