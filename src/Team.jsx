@@ -5,6 +5,7 @@ import {
     doc,
     updateDoc,
     arrayUnion,
+    arrayRemove,
     getDoc,
     getDocs,
     query,
@@ -106,6 +107,16 @@ function Team({ user }) {
         return members.some(m => getInactiveDays(m.lastActive) >= 3)
     }
 
+    async function leaveTeam(teamId) {
+        const ref = doc(db, "teams", teamId)
+
+        await updateDoc(ref, {
+            members: arrayRemove(user.uid)
+        })
+
+        await fetchMyTeam()
+    }
+
     useEffect(() => {
         if (user) fetchMyTeam()
     }, [user])
@@ -144,7 +155,7 @@ function Team({ user }) {
                         const members = membersMap[team.id] || []
 
                         return (
-                            <div key={team.id} style={{marginBottom: "30px"}} className="card">
+                            <div key={team.id} style={{ marginBottom: "30px" }} className="card">
                                 <p>チーム名: {team.name}</p>
                                 <p>チームID: {team.id}</p>
                                 <button onClick={() => {
@@ -171,7 +182,11 @@ function Team({ user }) {
                                             {days >= 3 && (
                                                 <p style={{ color: "red" }}>アウト</p>
                                             )}
-                                            
+
+                                            <button onClick={() => leaveTeam(team.id)}>
+                                                脱退
+                                            </button>
+
                                             {index !== members.length - 1 && <hr />}
                                         </div>
                                     )
