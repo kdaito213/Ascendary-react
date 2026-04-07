@@ -183,9 +183,11 @@ function Team({ user }) {
                                                 <p style={{ color: "red" }}>アウト</p>
                                             )}
 
-                                            <button onClick={() => leaveTeam(team.id)}>
-                                                脱退
-                                            </button>
+                                            {m.uid === user.uid && (
+                                                <button onClick={() => leaveTeam(team.id)}>
+                                                    脱退
+                                                </button>
+                                            )}
 
                                             {index !== members.length - 1 && <hr />}
                                         </div>
