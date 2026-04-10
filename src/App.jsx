@@ -41,7 +41,7 @@ function App() {
   const [mode, setMode] = useState("training")
   const [menuOpen, setMenuOpen] = useState(false)
 
-  // 🔹 認証
+  // 認証
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser)
