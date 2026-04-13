@@ -12,6 +12,7 @@ import RecordsCompetition from './RecordsCompetition.jsx'
 import Team from './Team.jsx'
 import Signup from './Signup.jsx'
 import Login from './Login.jsx'
+import Profile from './Profile.jsx'
 import {
   collection,
   getDocs,
@@ -94,7 +95,7 @@ function App() {
 
   async function addRecordTraining(newRecord) {
     if (!user) return
-    
+
     await addDoc(collection(db, "users", user.uid, "training"), newRecord)
 
     await updateDoc(doc(db, "users", user.uid), {
@@ -104,7 +105,7 @@ function App() {
 
   async function addRecordCompetition(newRecord) {
     if (!user) return
-    
+
     await addDoc(collection(db, "users", user.uid, "competition"), newRecord)
 
     await updateDoc(doc(db, "users", user.uid), {
@@ -114,13 +115,13 @@ function App() {
 
   async function deleteRecordTraining(id) {
     if (!user) return
-    
+
     await deleteDoc(doc(db, "users", user.uid, "training", id))
   }
 
   async function deleteRecordCompetition(id) {
     if (!user) return
-    
+
     await deleteDoc(doc(db, "users", user.uid, "competition", id))
   }
 
@@ -178,6 +179,9 @@ function App() {
 
           {/* メニュー（下段） */}
           <div className={`nav-links ${menuOpen ? "open" : ""}`}>
+            <Link to="/profile" onClick={() => setMenuOpen(false)}>
+              プロフィール
+            </Link>
             <Link to="/" onClick={() => setMenuOpen(false)}>ダッシュボード</Link>
             <Link to="/add" onClick={() => setMenuOpen(false)}>記録</Link>
             <Link to="/records" onClick={() => setMenuOpen(false)}>一覧</Link>
@@ -194,6 +198,7 @@ function App() {
       </header>
 
       <Routes>
+        <Route path="/profile" element={<Profile user={user} />} />
 
         <Route
           path="/"
