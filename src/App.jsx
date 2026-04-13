@@ -165,7 +165,7 @@ function App() {
       <header className={mode === "training" ? "training-fixed-header" : "competition-fixed-header"}>
         <nav className="header-content">
 
-          {/* 上段 */}
+          /* 上段 */
           <div className="header-top">
             <div className="mode-switch">
               <span className={mode === "training" ? "active" : ""}>練習</span>
@@ -187,7 +187,7 @@ function App() {
             </div>
           </div>
 
-          {/* メニュー（下段） */}
+          /* メニュー（下段） */
           <div className={`nav-links ${menuOpen ? "open" : ""}`}>
             <Link to="/" onClick={() => setMenuOpen(false)}>ダッシュボード</Link>
             <Link to="/add" onClick={() => setMenuOpen(false)}>記録</Link>
