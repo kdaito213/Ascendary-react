@@ -1,20 +1,22 @@
 /* ===== 全体 ===== */
 
-*{ box-sizing: border-box;}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
-  background:white;
-  color:black;
-  font-family: "Helvetica Neue", Arial, sans-serif;
-  overflow-x: hidden;
+  background:#f5f7fa;
+  color:#222;
+  font-family:"Helvetica Neue", Arial, sans-serif;
+  overflow-x:hidden;
 }
 
 #root{
-  width: 95%;
+  width:95%;
   max-width:1200px;
   margin:0 auto;
-  padding:40px 20px;
+  padding:90px 20px 40px;
 }
 
 /* ===== 見出し ===== */
@@ -38,111 +40,128 @@ h3{
 
 /* ===== 固定ヘッダー ===== */
 
+.training-fixed-header,
+.competition-fixed-header{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  padding:12px 0;
+  z-index:1000;
+}
+
 .training-fixed-header{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #1279df;
-  color: white;
-  padding: 10px 0;
-  z-index: 1000;
+  background:#1279df;
 }
 
 .competition-fixed-header{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background-color: #df1212;
-  color: white;
-  padding: 10px 0;
-  z-index: 1000;
+  background:#df1212;
+}
+
+.training-fixed-header a,
+.competition-fixed-header a{
+  text-decoration:none;
+  margin-right:20px;
+  font-weight:600;
 }
 
 .training-fixed-header a{
   color:white;
-  text-decoration:none;
-  margin-right:20px;
-  font-weight:600;
 }
 
 .competition-fixed-header a{
-  color:rgb(240, 190, 8);
-  text-decoration:none;
-  margin-right:20px;
-  font-weight:600;
+  color:#ffe082;
 }
 
-.header-content{
-  max-width:900px;
-  margin:0 auto;
-  position: relative;
-  padding: 0 12px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-}
-
-.fixed-header a:hover{
+.training-fixed-header a:hover,
+.competition-fixed-header a:hover{
   text-decoration:underline;
 }
 
+.header-content{
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 16px;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  position:relative;
+}
+
+.header-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  width:100%;
+}
+
+/* ===== ナビ ===== */
+
+.nav-links{
+  display:flex;
+  align-items:center;
+  gap:15px;
+}
+
 /* ===== モード切替 ===== */
+
 .switch{
-  position: relative;
-  display: inline-block;
-  width: 60px;
-  height: 34px;
+  position:relative;
+  display:inline-block;
+  width:60px;
+  height:34px;
 }
 
 .switch input{
-  opacity: 0;
-  width: 0;
-  height: 0;
+  opacity:0;
+  width:0;
+  height:0;
 }
 
 .mode-switch{
   display:flex;
   align-items:center;
   gap:6px;
-  flex-wrap: wrap;
+  flex-wrap:wrap;
 }
 
 .mode-switch span{
   color:white;
+  font-size:12px;
   font-weight:500;
-  font-size: 12px;
-  transition: 0.3s;
 }
 
 .mode-switch .active{
-  color:rgb(169, 165, 165);
+  color:#d0d0d0;
   font-weight:700;
 }
 
 .slider{
-  position: absolute;
+  position:absolute;
   cursor:pointer;
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
-  background-color:#ccc;
-  transition:.4s;
+  inset:0;
+
+  background:#ccc;
+  transition:.3s;
   border-radius:34px;
 }
 
 .slider:before{
-  position:absolute;
   content:"";
-  height:26px;
+  position:absolute;
+
   width:26px;
+  height:26px;
+
   left:4px;
   bottom:4px;
+
   background:white;
-  transition:.4s;
   border-radius:50%;
+
+  transition:.3s;
 }
 
 input:checked + .slider{
@@ -153,102 +172,96 @@ input:checked + .slider:before{
   transform:translateX(26px);
 }
 
-/* ===== 入力フォーム ===== */
+/* ===== 入力 ===== */
 
 input{
   width:100%;
   padding:10px;
   margin:6px 0;
-  background:white;
-  border:1px solid #333;
+
+  border:1px solid #ccc;
   border-radius:6px;
-  color:black;
+
   font-size:14px;
 }
 
 input:focus{
   outline:none;
-  border:1px solid #1279df;
+  border-color:#1279df;
 }
-
-/* ===== ハンバーガー ===== */
-.hamburger{
-  display:none;
-  font-size:28px;
-  cursor:pointer;
-}
-
-/* ナビ */
-.nav-links{
-  display:flex;
-  align-items:center;
-  gap:15px;
-}
-
 
 /* ===== ボタン ===== */
 
 button{
   padding:10px 16px;
   margin:8px;
+
   border:none;
   border-radius:6px;
+
   background:#00c853;
   color:white;
+
   font-weight:600;
   cursor:pointer;
-  transition:0.2s;
+
+  transition:.2s;
 }
 
 button:hover{
   background:#00e676;
 }
 
-/* 削除ボタン */
-
-button:last-child{
+.delete-btn{
   background:#e53935;
 }
 
-button:last-child:hover{
+.delete-btn:hover{
   background:#ff5252;
 }
 
-/* ===== 記録カード ===== */
+/* ===== カード ===== */
+
+.card,
+.dashboard-card,
+.competition-card{
+  background:white;
+  border-radius:12px;
+  padding:20px;
+
+  border:1px solid #ddd;
+
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+}
+
+.dashboard-card{
+  margin-bottom:30px;
+}
 
 .record-card{
-  background:#1a1a1a;
+  background:white;
+
+  border:1px solid #ddd;
   border-radius:10px;
+
   padding:15px;
   margin-top:10px;
+
   display:flex;
   justify-content:space-between;
   align-items:center;
-  border:1px solid #2a2a2a;
 }
 
 .record-info{
   font-size:14px;
 }
 
-/* 大会記録一覧 */
+/* ===== 大会 ===== */
 
 .competition-container{
   display:flex;
   flex-direction:column;
   gap:20px;
-}
-
-.competition-card{
-  background:white;
-  border-radius:12px;
-  padding:20px;
-  box-shadow:0 3px 8px rgba(0,0,0,0.1);
-  border:1px solid #eee;
-}
-
-.competition-header{
-  margin-bottom:10px;
 }
 
 .rank{
@@ -260,30 +273,21 @@ button:last-child:hover{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:6px;
+
   margin:10px 0;
 }
 
-.competition-card button{
-  margin-top:10px;
-}
-
-/* ===== カードUI ===== */
-
-.card{
-  background:#ffffff;
-  padding:20px;
-  border-radius:12px;
-  margin-top:20px;
-  border:1px solid #2a2a2a;
-}
-
-/* ===== グラフエリア ===== */
+/* ===== グラフ ===== */
 
 .graph-area{
   margin-top:30px;
   padding:20px;
-  background:#1a1a1a;
+
+  background:white;
   border-radius:12px;
+
+  border:1px solid #ddd;
+  overflow-x:auto;
 }
 
 .graph-area canvas,
@@ -291,66 +295,26 @@ button:last-child:hover{
   max-width:100%;
 }
 
-.dashboard-card{
-  background: white;
-  border: 1px solid #333;
-  border-radius: 12px;
+/* ===== ハンバーガー ===== */
 
-  padding: 20px;
-  margin-bottom: 30px;
-
-  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+.hamburger{
+  display:none;
+  font-size:28px;
+  cursor:pointer;
 }
 
-.header-top{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  width: 100%;
-}
+/* ===== スマホ ===== */
 
-/* ===== スマホ対応 ===== */
 @media(max-width:600px){
 
-  /* 全体余白調整 */
   #root{
-    padding:80px 12px 20px; /* ヘッダー分余白追加 */
-    max-width:100%;
-  }
-
-  .header-top{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-  }
-
-  /* ヘッダーを縦にする */
-  .header-content{
-    flex-direction:column;
-    align-items:stretch;
-  }
-
-  /* ナビリンク折り返し */
-  .header-content a{
-    margin-right:10px;
-    font-size:14px;
+    width:100%;
+    padding:90px 12px 20px;
   }
 
   .switch{
     width:50px;
     height:28px;
-  }
-
-  /* モード切替も整える */
-  .mode-switch{
-    display:flex;
-    align-items:center;
-    gap:6px;
-    justify-content:flex-start; 
-  }
-
-  .mode-switch span{
-    white-space:nowrap; /* 改行防止 */
   }
 
   .slider:before{
@@ -362,71 +326,55 @@ button:last-child:hover{
     transform:translateX(22px);
   }
 
-  /* 入力フォーム */
   input{
-    width:100%;
-    font-size:16px; /* iPhoneズーム防止 */
+    font-size:16px;
   }
 
-  /* ボタンを縦並び */
   button{
     width:100%;
     margin:6px 0;
   }
 
-  /* 記録カード */
   .record-card{
     flex-direction:column;
     align-items:flex-start;
     gap:8px;
   }
 
-  /* スコアグリッド1列に */
   .score-grid{
     grid-template-columns:1fr;
   }
 
-  /* グラフ横スクロール対応 */
-  .graph-area{
-    overflow-x:auto;
-    max-width: 100%;
-    padding: 10px;
-  }
-
-  .graph-area > *{
-    width:100% !important;
-    height:auto !important;
-  }
-
-  /* ダッシュボードカード余白 */
   .dashboard-card{
     padding:15px;
   }
 
   .hamburger{
     display:block;
-    flex-shrink: 0;
+    flex-shrink:0;
   }
 
   .nav-links{
     position:absolute;
+
     top:60px;
     right:0;
-    width:200px;
+
+    width:220px;
 
     flex-direction:column;
     align-items:flex-start;
 
     background:white;
-    color:black;
 
     padding:15px;
 
-    border-radius:10px 0 0 10px;
+    border-radius:12px 0 0 12px;
+
     box-shadow:0 5px 15px rgba(0,0,0,0.2);
 
-    transform:translateX(100%);
-    transition:0.3s;
+    transform:translateX(110%);
+    transition:.3s;
   }
 
   .nav-links.open{
@@ -434,12 +382,8 @@ button:last-child:hover{
   }
 
   .nav-links a{
-    color:black;
+    color:#222;
     width:100%;
     padding:10px 0;
-  }
-
-  .nav-links button{
-    width:100%;
   }
 }
