@@ -16,7 +16,7 @@ body{
   width:95%;
   max-width:1200px;
   margin:0 auto;
-  padding:90px 20px 40px;
+  padding:110px 20px 40px;
 }
 
 /* ===== 見出し ===== */
@@ -280,6 +280,7 @@ button:hover{
 /* ===== グラフ ===== */
 
 .graph-area{
+  width: 100%;
   margin-top:30px;
   padding:20px;
 
@@ -288,10 +289,12 @@ button:hover{
 
   border:1px solid #ddd;
   overflow-x:auto;
+  overflow-y: hidden;
 }
 
 .graph-area canvas,
 .graph-area svg{
+  display: block;
   max-width:100%;
 }
 
@@ -309,7 +312,7 @@ button:hover{
 
   #root{
     width:100%;
-    padding:90px 12px 20px;
+    padding:120px 12px 20px;
   }
 
   .switch{

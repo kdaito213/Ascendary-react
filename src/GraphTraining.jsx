@@ -34,8 +34,8 @@ function GraphTraining({record}) {
         {skills.map((skill) => (
             <div key={skill} style={{marginBottom: "30px"}}>
                 <h3>{skill}</h3>
-                <div style={{ width: "150%", aspectRatio: "16 / 9" }}>
-                    <ResponsiveContainer>
+                <div style={{ width: "100%", height: "300px" }}>
+                    <ResponsiveContainer width="100%" height="100%">
                         <LineChart
                             data={makeGraphDataBySkill(record, skill)}
                         >
