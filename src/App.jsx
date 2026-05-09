@@ -10,6 +10,8 @@ import DashboardCompetition from './DashboardCompetition.jsx'
 import RecordsTraining from './RecordsTraining.jsx'
 import RecordsCompetition from './RecordsCompetition.jsx'
 import Team from './Team.jsx'
+import Signup from './Signup.jsx'
+import Login from './Login.jsx'
 import {
   collection,
   getDocs,
@@ -24,11 +26,10 @@ import {
 import { db } from './firebase.js'
 import { auth } from './firebase.js'
 import {
-  signInWithEmailAndPassword,
-  createUserWithEmailAndPassword,
   onAuthStateChanged,
   signOut
 } from "firebase/auth"
+import { Navigate } from 'react-router-dom'
 
 function App() {
 
@@ -41,6 +42,7 @@ function App() {
   const [mode, setMode] = useState("training")
   const [menuOpen, setMenuOpen] = useState(false)
 
+
   // 認証
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
@@ -49,7 +51,6 @@ function App() {
       if (currentUser) {
         await setDoc(doc(db, "users", currentUser.uid), {
           email: currentUser.email,
-          username: currentUser.email.split("@")[0]
         }, { merge: true })
       }
     })
@@ -92,6 +93,8 @@ function App() {
     : recordCompetition
 
   async function addRecordTraining(newRecord) {
+    if (!user) return
+    
     await addDoc(collection(db, "users", user.uid, "training"), newRecord)
 
     await updateDoc(doc(db, "users", user.uid), {
@@ -100,6 +103,8 @@ function App() {
   }
 
   async function addRecordCompetition(newRecord) {
+    if (!user) return
+    
     await addDoc(collection(db, "users", user.uid, "competition"), newRecord)
 
     await updateDoc(doc(db, "users", user.uid), {
@@ -108,10 +113,14 @@ function App() {
   }
 
   async function deleteRecordTraining(id) {
+    if (!user) return
+    
     await deleteDoc(doc(db, "users", user.uid, "training", id))
   }
 
   async function deleteRecordCompetition(id) {
+    if (!user) return
+    
     await deleteDoc(doc(db, "users", user.uid, "competition", id))
   }
 
@@ -130,33 +139,13 @@ function App() {
 
   if (!user) {
     return (
-      <div>
-        <h2>ログイン</h2>
-
-        <input
-          type="email"
-          placeholder="email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-
-        <input
-          type="password"
-          placeholder="password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <button onClick={async () => {
-          await signInWithEmailAndPassword(auth, email, password)
-        }}>
-          ログイン
-        </button>
-
-        <button onClick={async () => {
-          await createUserWithEmailAndPassword(auth, email, password)
-        }}>
-          新規登録
-        </button>
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+      </BrowserRouter>
     )
   }
 
@@ -165,7 +154,7 @@ function App() {
       <header className={mode === "training" ? "training-fixed-header" : "competition-fixed-header"}>
         <nav className="header-content">
 
-          {/* 上段  */}
+          {/* 上段 */}
           <div className="header-top">
             <div className="mode-switch">
               <span className={mode === "training" ? "active" : ""}>練習</span>
@@ -187,14 +176,18 @@ function App() {
             </div>
           </div>
 
-          {/* メニュー（下段）  */}
+          {/* メニュー（下段） */}
           <div className={`nav-links ${menuOpen ? "open" : ""}`}>
             <Link to="/" onClick={() => setMenuOpen(false)}>ダッシュボード</Link>
             <Link to="/add" onClick={() => setMenuOpen(false)}>記録</Link>
             <Link to="/records" onClick={() => setMenuOpen(false)}>一覧</Link>
             <Link to="/graph" onClick={() => setMenuOpen(false)}>グラフ</Link>
             <Link to="/team" onClick={() => setMenuOpen(false)}>チーム</Link>
-            <button onClick={() => signOut(auth)}>ログアウト</button>
+            <button onClick={async () => {
+              await signOut(auth)
+            }}>
+              ログアウト
+            </button>
           </div>
 
         </nav>
