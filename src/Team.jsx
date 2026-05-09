@@ -123,7 +123,7 @@ function Team({ user }) {
 
     return (
         <div>
-            <h1>チーム</h1>
+            <h2>チーム</h2>
 
             {/*作成*/}
             <div>
