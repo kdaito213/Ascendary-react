@@ -25,7 +25,7 @@ function Signup() {
 
         } catch (error) {
             console.error(error)
-            alert("登録失敗")
+            alert("このメールアドレスはすでにアカウントが存在します。")
         }
 
     }
