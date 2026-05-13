@@ -12,6 +12,7 @@ import RecordsCompetition from './RecordsCompetition.jsx'
 import Team from './Team.jsx'
 import Signup from './Signup.jsx'
 import Login from './Login.jsx'
+import HowTo from './HowTo.jsx'
 import Profile from './Profile.jsx'
 import {
   collection,
@@ -144,6 +145,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/howto" element={<HowTo />} />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
       </BrowserRouter>

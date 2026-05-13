@@ -59,6 +59,11 @@ function Signup() {
             <p onClick={() => navigate("/login")}>
                 ログインはこちら
             </p>
+
+            <p onClick={() => navigate("/howto")}>
+                →  使い方を見る
+            </p>
+
         </div>
     )
 }
