@@ -6,10 +6,34 @@
 
 body{
   margin:0;
-  background:#f5f7fa;
-  color:#222;
-  font-family:"Helvetica Neue", Arial, sans-serif;
+
+  background:
+    radial-gradient(circle at top left, #312e81 0%, transparent 25%),
+    radial-gradient(circle at bottom right, #4c1d95 0%, transparent 25%),
+    linear-gradient(to bottom, #0f172a, #020617);
+
+  background-attachment: fixed;
+
+  color: #e2e8f0;
+
+  font-family:
+    "Inter",
+    "Noto Sans JP",
+    sans-serif;
+
   overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+
+  background:
+    radial-gradient(circle at 20% 20%, rgba(99,102,241,0.15), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(168,85,247,0.12), transparent 40%);
+
+  pointer-events:none;
 }
 
 #root{
@@ -35,27 +59,41 @@ h2{
 h3{
   margin-top:25px;
   font-size:1.2rem;
-  color:#1279df;
+  color:#a5b4fc;
 }
 
 /* ===== 固定ヘッダー ===== */
 
 .training-fixed-header,
 .competition-fixed-header{
+
   position:fixed;
   top:0;
   left:0;
+
   width:100%;
-  padding:12px 0;
+
+  padding:14px 0;
+
   z-index:1000;
+
+  backdrop-filter:blur(16px);
+
+  background:rgba(2,6,23,0.75);
+
+  border-bottom:
+    1px solid rgba(255,255,255,0.08);
+
+  box-shadow:
+    0 4px 20px rgba(0,0,0,0.05);
 }
 
 .training-fixed-header{
-  background:#1279df;
+  border-bottom:2px solid #3b82f6;
 }
 
 .competition-fixed-header{
-  background:#df1212;
+  border-bottom:2px solid #ef4444;
 }
 
 .training-fixed-header a,
@@ -65,17 +103,19 @@ h3{
   font-weight:600;
 }
 
-.training-fixed-header a{
-  color:white;
+.training-fixed-header a,
+.competition-fixed-header a{
+  color: rgba(226, 232, 240, 0.85);
 }
 
-.competition-fixed-header a{
-  color:#ffe082;
+.mode-switch span{
+  color:#f8fafc;
 }
 
 .training-fixed-header a:hover,
 .competition-fixed-header a:hover{
   text-decoration:underline;
+  color: #ffffff;
 }
 
 .header-content{
@@ -128,13 +168,13 @@ h3{
 }
 
 .mode-switch span{
-  color:white;
+  color:rgba(226,232,240,0.6);
   font-size:12px;
   font-weight:500;
 }
 
 .mode-switch .active{
-  color:#d0d0d0;
+  color:#f8fafc;
   font-weight:700;
 }
 
@@ -175,41 +215,56 @@ input:checked + .slider:before{
 /* ===== 入力 ===== */
 
 input{
-  width:100%;
-  padding:10px;
-  margin:6px 0;
+  background:rgba(15,23,42,0.8);
 
-  border:1px solid #ccc;
-  border-radius:6px;
+  color:white;
 
-  font-size:14px;
+  border:1px solid rgba(255,255,255,0.1);
+
+  border-radius:12px;
 }
 
 input:focus{
   outline:none;
-  border-color:#1279df;
+
+  border-color:#6366f1;
+
+  box-shadow:
+    0 0 0 3px rgba(99,102,241,0.2);
 }
 
 /* ===== ボタン ===== */
 
 button{
-  padding:10px 16px;
-  margin:8px;
+  padding:12px 18px;
 
   border:none;
-  border-radius:6px;
+  border-radius:14px;
 
-  background:#00c853;
+  background:
+    linear-gradient(
+      135deg,
+      #6366f1,
+      #8b5cf6
+    );
+
   color:white;
 
   font-weight:600;
-  cursor:pointer;
 
-  transition:.2s;
+  transition:all .2s ease;
+
+  box-shadow:
+    0 4px 14px rgba(99,102,241,0.25);
+
+  cursor: pointer;
 }
 
 button:hover{
-  background:#00e676;
+  transform:translateY(-2px);
+
+  box-shadow:
+    0 8px 24px rgba(99,102,241,0.35);
 }
 
 .delete-btn{
@@ -224,14 +279,42 @@ button:hover{
 
 .card,
 .dashboard-card,
+.competition-card,
+.record-card,
+.graph-area{
+
+  background:rgba(15,23,42,0.72);
+
+  backdrop-filter:blur(16px);
+
+  border:1px solid rgba(255,255,255,0.08);
+
+  box-shadow:
+  0 10px 40px rgba(0,0,0,0.4),
+  0 0 0 1px rgba(255,255,255,0.04);
+
+  border-radius:20px;
+
+  color:#e2e8f0;
+}
+
+.record-card,
+.dashboard-card,
 .competition-card{
-  background:white;
-  border-radius:12px;
-  padding:20px;
 
-  border:1px solid #ddd;
+  transition:
+    transform .2s ease,
+    box-shadow .2s ease;
+}
 
-  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+.record-card:hover,
+.dashboard-card:hover,
+.competition-card:hover{
+
+  transform:translateY(-4px);
+
+  box-shadow:
+    0 12px 28px rgba(0,0,0,0.12);
 }
 
 .dashboard-card{
@@ -239,11 +322,6 @@ button:hover{
 }
 
 .record-card{
-  background:white;
-
-  border:1px solid #ddd;
-  border-radius:10px;
-
   padding:15px;
   margin-top:10px;
 
@@ -251,7 +329,6 @@ button:hover{
   justify-content:space-between;
   align-items:center;
 }
-
 .record-info{
   font-size:14px;
 }
@@ -280,16 +357,12 @@ button:hover{
 /* ===== グラフ ===== */
 
 .graph-area{
-  width: 100%;
+  width:100%;
   margin-top:30px;
   padding:20px;
 
-  background:white;
-  border-radius:12px;
-
-  border:1px solid #ddd;
   overflow-x:auto;
-  overflow-y: hidden;
+  overflow-y:hidden;
 }
 
 .graph-area canvas,
@@ -368,11 +441,15 @@ button:hover{
     flex-direction:column;
     align-items:flex-start;
 
-    background:white;
+    background:rgba(15,23,42,0.95);
 
     padding:15px;
 
     border-radius:12px 0 0 12px;
+
+    border:1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter:blur(12px);
 
     box-shadow:0 5px 15px rgba(0,0,0,0.2);
 
@@ -385,7 +462,7 @@ button:hover{
   }
 
   .nav-links a{
-    color:#222;
+    color:#e2e8f0;
     width:100%;
     padding:10px 0;
   }
