@@ -1,14 +1,25 @@
 import { useState } from "react";
+import { collection, doc, addDoc, updateDoc } from "firebase/firestore";
+import { db } from "./firebase";
 
-function Add({onAdd, skills = []}){
+function Add({user, skills = []}){
     const [date , setDate] = useState('')
     const [name , setName] = useState('')
     const [score , setScore] = useState('')
 
+    async function addRecordTraining(newRecord) {
+        if (!user) return
+
+        await addDoc(collection(db, "users", user.uid, "training"), newRecord)
+
+        await updateDoc(doc(db, "users", user.uid), {
+        lastActive: new Date().toISOString().split("T")[0]
+        })
+    }
+
     function handleAdd(){
         if(!date || !name || score === '') return
-        
-        onAdd({date: date, name: name, score: Number(score)})
+        addRecordTraining({date: date, name: name, score: Number(score)})
         setDate('')
         setName('')
         setScore('')

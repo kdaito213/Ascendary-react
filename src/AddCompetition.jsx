@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { collection, doc, addDoc, updateDoc } from "firebase/firestore";
+import { db } from "./firebase";
 
-function Add({onAdd}){
+function Add({user, sills}){
     const [date , setDate] = useState('')
     const [name , setName] = useState('')
     const [rank , setRank] = useState('')
@@ -10,8 +12,18 @@ function Add({onAdd}){
     const [composition , setComposition] = useState('')
     const [deduction, setDeduction] = useState('')
 
+    async function addRecordCompetition(newRecord) {
+        if (!user) return
+
+        await addDoc(collection(db, "users", user.uid, "competition"), newRecord)
+
+        await updateDoc(doc(db, "users", user.uid), {
+        lastActive: new Date().toISOString().split("T")[0]
+        })
+    }
+
     function handleAdd(){
-        onAdd({
+        addRecordCompetition({
             date: date, 
             name: name, 
             rank: rank, 

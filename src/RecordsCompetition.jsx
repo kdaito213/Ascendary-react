@@ -1,8 +1,17 @@
-function RecordsCompetition({ record, deleteRecord }) {
+import { deleteDoc, doc } from "firebase/firestore"
+import { db } from "./firebase"
+
+function RecordsCompetition({ record, user }) {
     let list = []
     let competitionsName = []
     let competitionsRank = []
     let competitionsDate = []
+
+    async function deleteRecordCompetition(id) {
+        if (!user) return
+
+        await deleteDoc(doc(db, "users", user.uid, "competition", id))
+    }
 
     for (let i = 0; i < record.length; i++) {
         if (!competitionsName.includes(record[i].name)) {
@@ -37,7 +46,7 @@ function RecordsCompetition({ record, deleteRecord }) {
                             <p>減点 {record[j].deduction}</p>
                         </div>
 
-                        <button onClick={() => deleteRecord(record[j].id)}>削除</button>
+                        <button onClick={() => deleteRecordCompetition(record[j].id)}>削除</button>
 
                     </div>
                 )

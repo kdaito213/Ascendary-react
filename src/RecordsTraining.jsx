@@ -1,6 +1,15 @@
-function RecordsTraining({ record, deleteRecord }) {
+import { deleteDoc, doc } from "firebase/firestore"
+import { db } from "./firebase"
+
+function RecordsTraining({ record ,user }) {
     let list = []
     let skills = []
+
+    async function deleteRecordTraining(id) {
+        if (!user) return
+
+        await deleteDoc(doc(db, "users", user.uid, "training", id))
+    }
 
     for (let i = 0; i < record.length; i++) {
         if (!skills.includes(record[i].name)) {
@@ -20,7 +29,7 @@ function RecordsTraining({ record, deleteRecord }) {
                 list.push(
                     <div key={record[j].id}>
                         {record[j].date}：{record[j].score}回
-                        <button onClick={() => deleteRecord(record[j].id)}>削除</button>
+                        <button onClick={() => deleteRecordTraining(record[j].id)}>削除</button>
                     </div>
                 )
             }

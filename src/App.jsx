@@ -18,7 +18,7 @@ import {
   collection,
   getDocs,
   addDoc,
-  deleteDoc,
+  /*deleteDoc,*/
   doc,
   setDoc,
   updateDoc,
@@ -93,38 +93,6 @@ function App() {
   const record = mode === "training"
     ? recordTraining
     : recordCompetition
-
-  async function addRecordTraining(newRecord) {
-    if (!user) return
-
-    await addDoc(collection(db, "users", user.uid, "training"), newRecord)
-
-    await updateDoc(doc(db, "users", user.uid), {
-      lastActive: new Date().toISOString().split("T")[0]
-    })
-  }
-
-  async function addRecordCompetition(newRecord) {
-    if (!user) return
-
-    await addDoc(collection(db, "users", user.uid, "competition"), newRecord)
-
-    await updateDoc(doc(db, "users", user.uid), {
-      lastActive: new Date().toISOString().split("T")[0]
-    })
-  }
-
-  async function deleteRecordTraining(id) {
-    if (!user) return
-
-    await deleteDoc(doc(db, "users", user.uid, "training", id))
-  }
-
-  async function deleteRecordCompetition(id) {
-    if (!user) return
-
-    await deleteDoc(doc(db, "users", user.uid, "competition", id))
-  }
 
   // 技名一覧
   function getSkillNames() {
@@ -215,8 +183,8 @@ function App() {
           path="/add"
           element={
             mode === "training"
-              ? <AddTraining onAdd={addRecordTraining} skills={skills} />
-              : <AddCompetition onAdd={addRecordCompetition} skills={skills} />
+              ? <AddTraining user={user} skills={skills} />
+              : <AddCompetition user={user} skills={skills} />
           }
         />
 
@@ -224,8 +192,8 @@ function App() {
           path="/records"
           element={
             mode === "training"
-              ? <RecordsTraining record={record} deleteRecord={deleteRecordTraining} />
-              : <RecordsCompetition record={record} deleteRecord={deleteRecordCompetition} />
+              ? <RecordsTraining record={record} user={user} />
+              : <RecordsCompetition record={record} user={user} />
           }
         />
 
