@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import { useState } from 'react'
+import { BrowserRouter, Routes, Route, Link, Navigate } from 'react-router-dom'
 import './App.css'
+import Header from './Header.jsx'
 import AddTraining from './AddTraining.jsx'
 import AddCompetition from './AddCompetition.jsx'
 import GraphTraining from "./GraphTraining.jsx"
@@ -14,98 +15,27 @@ import Signup from './Signup.jsx'
 import Login from './Login.jsx'
 import HowTo from './HowTo.jsx'
 import Profile from './Profile.jsx'
-import {
-  collection,
-  getDocs,
-  addDoc,
-  /*deleteDoc,*/
-  doc,
-  setDoc,
-  updateDoc,
-  onSnapshot,
-  arrayRemove
-} from 'firebase/firestore'
-import { db } from './firebase.js'
+import useAuth from "./hooks/useAuth"
+import useRecords from "./hooks/useRecords"
 import { auth } from './firebase.js'
-import {
-  onAuthStateChanged,
-  signOut
-} from "firebase/auth"
-import { Navigate } from 'react-router-dom'
+import { signOut } from "firebase/auth"
 
 function App() {
-
-  const [user, setUser] = useState(null)
-  const [recordTraining, setRecordTraining] = useState([])
-  const [recordCompetition, setRecordCompetition] = useState([])
-
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
   const [mode, setMode] = useState("training")
   const [menuOpen, setMenuOpen] = useState(false)
 
-
-  // 認証
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser)
-
-      if (currentUser) {
-        await setDoc(doc(db, "users", currentUser.uid), {
-          email: currentUser.email,
-        }, { merge: true })
-      }
-    })
-
-    return () => unsubscribe()
-  }, [])
-
-  // リアルタイム更新
-  useEffect(() => {
-    if (!user) return
-
-    const unsubTraining = onSnapshot(
-      collection(db, "users", user.uid, "training"),
-      (snapshot) => {
-        setRecordTraining(snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })))
-      }
-    )
-
-    const unsubCompetition = onSnapshot(
-      collection(db, "users", user.uid, "competition"),
-      (snapshot) => {
-        setRecordCompetition(snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })))
-      }
-    )
-
-    return () => {
-      unsubTraining()
-      unsubCompetition()
-    }
-  }, [user])
+  const user = useAuth()
+  const {
+    recordTraining,
+    recordCompetition
+  } = useRecords(user)
 
   const record = mode === "training"
     ? recordTraining
     : recordCompetition
 
   // 技名一覧
-  function getSkillNames() {
-    let names = []
-    for (let i = 0; i < record.length; i++) {
-      if (!names.includes(record[i].name)) {
-        names.push(record[i].name)
-      }
-    }
-    return names
-  }
-
-  let skills = getSkillNames()
+  const skills = [...new Set(record.map(r => r.name))]
 
   if (!user) {
     return (
@@ -122,50 +52,13 @@ function App() {
 
   return (
     <BrowserRouter>
-      <header className={mode === "training" ? "training-fixed-header" : "competition-fixed-header"}>
-        <nav className="header-content">
 
-          {/* 上段 */}
-          <div className="header-top">
-            <div className="mode-switch">
-              <span className={mode === "training" ? "active" : ""}>練習</span>
-              <label className="switch">
-                <input
-                  type="checkbox"
-                  checked={mode === "competition"}
-                  onChange={(e) => {
-                    setMode(e.target.checked ? "competition" : "training")
-                  }}
-                />
-                <span className="slider"></span>
-              </label>
-              <span className={mode === "competition" ? "active" : ""}>大会</span>
-            </div>
-
-            <div className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
-              ☰
-            </div>
-          </div>
-
-          {/* メニュー（下段） */}
-          <div className={`nav-links ${menuOpen ? "open" : ""}`}>
-            <Link to="/profile" onClick={() => setMenuOpen(false)}>
-              プロフィール
-            </Link>
-            <Link to="/" onClick={() => setMenuOpen(false)}>ダッシュボード</Link>
-            <Link to="/add" onClick={() => setMenuOpen(false)}>記録</Link>
-            <Link to="/records" onClick={() => setMenuOpen(false)}>一覧</Link>
-            <Link to="/graph" onClick={() => setMenuOpen(false)}>グラフ</Link>
-            <Link to="/team" onClick={() => setMenuOpen(false)}>チーム</Link>
-            <button onClick={async () => {
-              await signOut(auth)
-            }}>
-              ログアウト
-            </button>
-          </div>
-
-        </nav>
-      </header>
+      <Header
+        mode={mode}
+        setMode={setMode}
+        menuOpen={menuOpen}
+        setMenuOpen={setMenuOpen}
+      />
 
       <Routes>
         <Route path="/profile" element={<Profile user={user} />} />
